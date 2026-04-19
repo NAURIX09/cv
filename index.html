@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Expert — CVMatch IA</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #05080f;
+    --bg2: #0b1120;
+    --card: #111827;
+    --card2: #1a2235;
+    --border: rgba(99,210,190,0.15);
+    --border2: rgba(99,210,190,0.3);
+    --gold: #f0b429;
+    --teal: #63d2be;
+    --blue: #3b82f6;
+    --purple: #a78bfa;
+    --red: #f87171;
+    --green: #4ade80;
+    --orange: #fb923c;
+    --pink: #f472b6;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --muted2: #94a3b8;
+    --code-bg: #0d1117;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0b1120 0%, #0f172a 50%, #1a0a2e 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 60px 48px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(99,210,190,0.08) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 18px;
+    background: rgba(99,210,190,0.08);
+    border: 1px solid rgba(99,210,190,0.3);
+    border-radius: 9999px;
+    font-size: 12px; font-weight: 600; color: var(--teal);
+    letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-dot { width:7px; height:7px; border-radius:50%; background:var(--teal); animation: pulse 2s infinite; }
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--teal); }
+  .hero p {
+    font-size: 16px; color: var(--muted2);
+    max-width: 580px; margin: 0 auto 36px;
+    font-weight: 300; line-height: 1.8;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  }
+  .hstat { text-align: center; }
+  .hstat-n {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px; font-weight: 900; color: var(--teal);
+  }
+  .hstat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+
+  /* NAV */
+  .nav-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(5,8,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; gap: 4px; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav-btn {
+    padding: 14px 18px;
+    background: none; border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--teal); }
+  .nav-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+  /* CONTENT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 60px 0; display: none; }
+  .section.active { display: block; }
+
+  /* SECTION HEADER */
+  .sec-header { margin-bottom: 40px; }
+  .sec-label {
+    font-size: 11px; font-weight: 700;
+    color: var(--teal); text-transform: uppercase; letter-spacing: .1em;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-label::before { content:''; width:20px; height:2px; background:var(--teal); border-radius:2px; }
+  .sec-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 900; color: #fff;
+    letter-spacing: -.5px; margin-bottom: 12px;
+  }
+  .sec-desc { font-size: 15px; color: var(--muted2); max-width: 680px; line-height: 1.8; }
+
+  /* CARDS GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .card-title { font-size: 15px; font-weight: 700; color: #fff; }
+  .card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .card p { font-size: 13px; color: var(--muted2); line-height: 1.7; }
+
+  /* FILE CARD */
+  .file-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .file-card-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .file-badge {
+    padding: 4px 12px; border-radius: 9999px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    flex-shrink: 0;
+  }
+  .badge-php { background: rgba(139,92,246,.2); color: #a78bfa; border: 1px solid rgba(139,92,246,.3); }
+  .badge-py { background: rgba(59,130,246,.2); color: #93c5fd; border: 1px solid rgba(59,130,246,.3); }
+  .badge-sql { background: rgba(248,113,113,.2); color: #fca5a5; border: 1px solid rgba(248,113,113,.3); }
+  .badge-css { background: rgba(244,114,182,.2); color: #f9a8d4; border: 1px solid rgba(244,114,182,.3); }
+  .badge-js { background: rgba(251,191,36,.2); color: #fcd34d; border: 1px solid rgba(251,191,36,.3); }
+  .file-name { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--teal); }
+  .file-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .code-bar {
+    background: rgba(255,255,255,.04);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    padding: 10px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .code-lang { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .code-title { font-size: 12px; color: var(--muted2); }
+  pre {
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: #e2e8f0;
+  }
+  .kw { color: #c084fc; } /* keywords */
+  .fn { color: #60a5fa; } /* functions */
+  .str { color: #4ade80; } /* strings */
+  .cmt { color: #4b5563; font-style: italic; } /* comments */
+  .num { color: #fb923c; } /* numbers */
+  .cls { color: #f472b6; } /* class names */
+  .var { color: #fde68a; } /* variables */
+
+  /* EXPLAIN BOX */
+  .explain {
+    background: rgba(99,210,190,0.04);
+    border: 1px solid rgba(99,210,190,0.15);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .explain-title {
+    font-size: 12px; font-weight: 700; color: var(--teal);
+    text-transform: uppercase; letter-spacing: .06em;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .explain p { font-size: 13px; color: var(--muted2); line-height: 1.7; }
+
+  /* WARN BOX */
+  .warn {
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 14px 0;
+  }
+  .warn-title { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .warn p { font-size: 13px; color: var(--muted2); line-height: 1.7; }
+
+  /* INFO BOX */
+  .info {
+    background: rgba(59,130,246,0.06);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 14px 0;
+  }
+  .info-title { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .info p { font-size: 13px; color: var(--muted2); line-height: 1.7; }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: wrap; margin: 24px 0;
+  }
+  .flow-step {
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center; min-width: 120px;
+  }
+  .flow-step-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px; font-weight: 900;
+    color: var(--teal); margin-bottom: 6px;
+  }
+  .flow-step-text { font-size: 12px; font-weight: 600; color: var(--text); }
+  .flow-arrow { color: var(--muted); font-size: 20px; padding: 0 8px; }
+
+  /* LINE ANNOTATION */
+  .line-block { margin: 20px 0; }
+  .line-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .line-code {
+    background: var(--code-bg);
+    padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #e2e8f0;
+    border-right: 1px solid var(--border);
+  }
+  .line-explain {
+    background: var(--card);
+    padding: 14px 18px;
+    font-size: 12px; color: var(--muted2);
+    line-height: 1.6;
+  }
+  .line-explain strong { color: var(--teal); }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .data-table th {
+    background: var(--card2);
+    padding: 12px 16px; text-align: left;
+    font-size: 11px; font-weight: 700; color: var(--teal);
+    text-transform: uppercase; letter-spacing: .06em;
+    border-bottom: 2px solid var(--border2);
+  }
+  .data-table td {
+    padding: 12px 16px;
+    font-size: 13px; color: var(--muted2);
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table tr:hover td { background: rgba(99,210,190,0.02); }
+  .data-table td:first-child { color: var(--teal); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; }
+
+  /* SCORE VISUAL */
+  .score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .score-label { font-size: 13px; color: var(--text); min-width: 110px; }
+  .score-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 9999px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 9999px; }
+  .score-pct { font-size: 12px; font-weight: 700; min-width: 36px; text-align: right; }
+
+  /* LAYER DIAGRAM */
+  .layer-diagram { display: flex; flex-direction: column; gap: 4px; margin: 24px 0; }
+  .layer {
+    padding: 14px 20px;
+    border-radius: 10px;
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid;
+  }
+  .layer-icon { font-size: 20px; }
+  .layer-name { font-size: 13px; font-weight: 700; }
+  .layer-tech { font-size: 11px; opacity: .7; margin-top: 2px; }
+  .layer-php { background: rgba(139,92,246,.08); border-color: rgba(139,92,246,.25); }
+  .layer-py { background: rgba(59,130,246,.08); border-color: rgba(59,130,246,.25); }
+  .layer-db { background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.25); }
+  .layer-ai { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.25); }
+  .layer-ui { background: rgba(244,114,182,.08); border-color: rgba(244,114,182,.25); }
+
+  /* CHIPS */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .chip {
+    padding: 5px 14px; border-radius: 9999px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid;
+  }
+  .chip-teal { background: rgba(99,210,190,.1); color: var(--teal); border-color: rgba(99,210,190,.3); }
+  .chip-gold { background: rgba(240,180,41,.1); color: var(--gold); border-color: rgba(240,180,41,.3); }
+  .chip-purple { background: rgba(167,139,250,.1); color: var(--purple); border-color: rgba(167,139,250,.3); }
+  .chip-blue { background: rgba(59,130,246,.1); color: var(--blue); border-color: rgba(59,130,246,.3); }
+  .chip-red { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.3); }
+  .chip-green { background: rgba(74,222,128,.1); color: var(--green); border-color: rgba(74,222,128,.3); }
+
+  /* STEP LIST */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: flex; gap: 20px; padding-bottom: 28px; position: relative; }
+  .step::before {
+    content: ''; position: absolute;
+    left: 19px; top: 44px;
+    width: 2px; height: calc(100% - 16px);
+    background: linear-gradient(to bottom, var(--teal), transparent);
+  }
+  .step:last-child::before { display: none; }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(99,210,190,.12);
+    border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 900;
+    color: var(--teal); flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .step-body { font-size: 13px; color: var(--muted2); line-height: 1.7; }
+
+  /* HIGHLIGHT */
+  .hl { background: rgba(99,210,190,.12); color: var(--teal); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: .9em; }
+  .hl-gold { background: rgba(240,180,41,.12); color: var(--gold); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: .9em; }
+  .hl-purple { background: rgba(167,139,250,.12); color: var(--purple); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: .9em; }
+
+  /* ANIM */
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .section.active { animation: fadeIn .35s ease; }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+  /* H2, H3, p */
+  h2 { font-size: 20px; font-weight: 700; color: #fff; margin: 28px 0 14px; }
+  h3 { font-size: 16px; font-weight: 600; color: var(--teal); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+  h3::before { content:'›'; color: var(--muted); }
+  p { font-size: 14px; color: var(--muted2); line-height: 1.75; margin-bottom: 12px; }
+  ul,ol { padding-left: 20px; }
+  li { font-size: 13px; color: var(--muted2); line-height: 1.7; margin-bottom: 6px; }
+  li strong { color: var(--text); }
+
+  /* RESPONSIVE */
+  @media(max-width:768px) {
+    .grid-2,.grid-3 { grid-template-columns:1fr; }
+    .line-row { grid-template-columns:1fr; }
+    .line-code { border-right:none; border-bottom:1px solid var(--border); }
+    .hero { padding:40px 20px; }
+    .container { padding:0 16px; }
+    .flow { flex-direction:column; }
+    .flow-arrow { transform:rotate(90deg); }
+    .score-row { flex-wrap:wrap; }
+    .hero-stats { gap:24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge"><div class="hero-dot"></div> Guide Expert Complet</div>
+  <h1>CVMatch <span>IA</span><br>Le Code Expliqué Ligne par Ligne</h1>
+  <p>Comprendre chaque fichier, chaque fonction, chaque connexion de ce projet de matching intelligent de CV — pour devenir un vrai développeur.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">21</div><div class="hstat-l">Fichiers analysés</div></div>
+    <div class="hstat"><div class="hstat-n">3039</div><div class="hstat-l">Lignes de code</div></div>
+    <div class="hstat"><div class="hstat-n">2</div><div class="hstat-l">Langages (PHP + Python)</div></div>
+    <div class="hstat"><div class="hstat-n">100%</div><div class="hstat-l">Expliqué</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <button class="nav-btn active" onclick="show('vue')">🗺️ Vue d'ensemble</button>
+  <button class="nav-btn" onclick="show('config')">⚙️ config.php</button>
+  <button class="nav-btn" onclick="show('db')">🗄️ Base de données</button>
+  <button class="nav-btn" onclick="show('auth')">🔐 Authentification</button>
+  <button class="nav-btn" onclick="show('dashboard')">📊 Dashboards</button>
+  <button class="nav-btn" onclick="show('api')">🐍 API Python</button>
+  <button class="nav-btn" onclick="show('ia')">🧠 Intelligence IA</button>
+  <button class="nav-btn" onclick="show('matching')">🎯 Algorithme</button>
+  <button class="nav-btn" onclick="show('css')">🎨 Design CSS</button>
+  <button class="nav-btn" onclick="show('flux')">🔄 Flux complets</button>
+  <button class="nav-btn" onclick="show('glossaire')">📖 Glossaire</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : VUE D'ENSEMBLE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-vue" class="section active">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Introduction</div>
+    <div class="sec-title">Qu'est-ce que CVMatch IA ?</div>
+    <p class="sec-desc">CVMatch IA est une plateforme web complète qui utilise l'Intelligence Artificielle pour mettre en relation des candidats et des recruteurs. Elle analyse les CV automatiquement et calcule des scores de compatibilité.</p>
+  </div>
+
+  <h2>🏗️ L'architecture en deux couches</h2>
+  <p>Le projet est divisé en <strong>deux applications distinctes</strong> qui communiquent ensemble :</p>
+
+  <div class="layer-diagram">
+    <div class="layer layer-ui">
+      <div class="layer-icon">🌐</div>
+      <div>
+        <div class="layer-name" style="color:#f9a8d4">Couche Interface (Frontend)</div>
+        <div class="layer-tech">HTML + CSS + JavaScript — Ce que l'utilisateur voit dans son navigateur</div>
+      </div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:20px;padding:4px 0">↕</div>
+    <div class="layer layer-php">
+      <div class="layer-icon">🐘</div>
+      <div>
+        <div class="layer-name" style="color:#c4b5fd">Couche Web (PHP)</div>
+        <div class="layer-tech">PHP — Gère les pages, les formulaires, la connexion, les sessions. Tourne sur Apache/Nginx.</div>
+      </div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:20px;padding:4px 0">↕ HTTP (cURL)</div>
+    <div class="layer layer-py">
+      <div class="layer-icon">🐍</div>
+      <div>
+        <div class="layer-name" style="color:#93c5fd">Couche API (Python / FastAPI)</div>
+        <div class="layer-tech">Python — Analyse les CV, calcule les scores, gère l'IA. Tourne sur le port 8000.</div>
+      </div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:20px;padding:4px 0">↕ SQL</div>
+    <div class="layer layer-db">
+      <div class="layer-icon">🗄️</div>
+      <div>
+        <div class="layer-name" style="color:#fca5a5">Couche Données (MySQL)</div>
+        <div class="layer-tech">MySQL — Stocke tout : candidats, recruteurs, CV, messages, historique des conversations.</div>
+      </div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:20px;padding:4px 0">↕ API</div>
+    <div class="layer layer-ai">
+      <div class="layer-icon">🤖</div>
+      <div>
+        <div class="layer-name" style="color:#86efac">Couche IA Externe (Groq)</div>
+        <div class="layer-tech">Groq API — LLM Llama 3 pour l'analyse, résumés, conversations. Sentence-Transformers pour les embeddings.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Analogie simple</div>
+    <p>Imagine un restaurant. <strong>PHP = le serveur</strong> qui prend les commandes et sert les plats. <strong>Python = le cuisinier</strong> qui prépare les plats complexes. <strong>MySQL = le réfrigérateur</strong> qui stocke tout. <strong>Groq/IA = le chef étoilé</strong> consulté pour les recettes sophistiquées.</p>
+  </div>
+
+  <hr class="divider">
+
+  <h2>📁 Structure des fichiers</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Partie PHP (dossier /public)</h3>
+      <table class="data-table">
+        <thead><tr><th>Fichier</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>index.php</td><td>Page d'accueil publique</td></tr>
+          <tr><td>config.php</td><td>Configuration centrale, connexion BD</td></tr>
+          <tr><td>login_candidat.php</td><td>Connexion/inscription candidat</td></tr>
+          <tr><td>login_recruteur.php</td><td>Connexion/inscription recruteur</td></tr>
+          <tr><td>dashboard_candidat.php</td><td>Espace personnel du candidat</td></tr>
+          <tr><td>dashboard_recruteur.php</td><td>Espace de recherche IA du recruteur</td></tr>
+          <tr><td>cv_view.php</td><td>Affichage sécurisé des CV</td></tr>
+          <tr><td>get_candidats.php</td><td>API JSON liste des candidats</td></tr>
+          <tr><td>get_messages.php</td><td>API JSON messages d'un candidat</td></tr>
+          <tr><td>envoyer_message.php</td><td>Envoi de message recruteur→candidat</td></tr>
+          <tr><td>logout.php</td><td>Déconnexion</td></tr>
+          <tr><td>database.sql</td><td>Schéma complet de la base de données</td></tr>
+          <tr><td>style.css</td><td>Tout le design visuel</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Partie Python (dossier /api)</h3>
+      <table class="data-table">
+        <thead><tr><th>Fichier</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>main.py</td><td>Point d'entrée de l'API FastAPI</td></tr>
+          <tr><td>db.py</td><td>Pool de connexions MySQL</td></tr>
+          <tr><td>routes/candidats.py</td><td>Route POST /candidats/upload</td></tr>
+          <tr><td>routes/recherche.py</td><td>Route POST /recherche (matching)</td></tr>
+          <tr><td>routes/conversation.py</td><td>Route POST /conversation/chat</td></tr>
+          <tr><td>services/cv.py</td><td>Lecture PDF/DOCX/image + sync</td></tr>
+          <tr><td>services/ia.py</td><td>Client Groq + fonctions IA</td></tr>
+          <tr><td>services/matching.py</td><td>Algorithme de scoring</td></tr>
+          <tr><td>requirements.txt</td><td>Dépendances Python à installer</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>👥 Les deux types d'utilisateurs</h2>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(99,210,190,.15)">👤</div>
+        <div>
+          <div class="card-title">Le Candidat</div>
+          <div class="card-sub">Cherche un emploi</div>
+        </div>
+      </div>
+      <p>S'inscrit sur la plateforme, remplit son profil (ville, expérience, compétences), et <strong>uploade son CV</strong> (PDF, DOCX ou image). L'IA extrait automatiquement ses compétences et crée un "vecteur numérique" de son profil. Il peut aussi recevoir des messages des recruteurs.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(240,180,41,.15)">🏢</div>
+        <div>
+          <div class="card-title">Le Recruteur</div>
+          <div class="card-sub">Cherche des talents</div>
+        </div>
+      </div>
+      <p>S'inscrit et accède au <strong>dashboard de recherche IA</strong>. Il tape une description de poste en langage naturel ("Développeur PHP 3 ans Abidjan") et l'IA lui retourne les candidats les plus pertinents classés par score. Il peut poser des questions à l'agent IA et contacter directement les candidats.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>🔗 Comment tout est connecté</h2>
+  <div class="flow">
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 1</div><div class="flow-step-text">Candidat uploade son CV (PHP)</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 2</div><div class="flow-step-text">PHP appelle l'API Python</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 3</div><div class="flow-step-text">Python lit le PDF & extrait le texte</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 4</div><div class="flow-step-text">Groq IA extrait les compétences</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 5</div><div class="flow-step-text">Embedding vectoriel stocké en BDD</div></div>
+  </div>
+  <div class="flow" style="margin-top:8px">
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 6</div><div class="flow-step-text">Recruteur tape sa recherche</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 7</div><div class="flow-step-text">API calcule score multicritères</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 8</div><div class="flow-step-text">Top 5 candidats retournés</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 9</div><div class="flow-step-text">Recruteur chatte avec l'IA</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-num">ÉTAPE 10</div><div class="flow-step-text">Recruteur contacte le candidat</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : CONFIG.PHP -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-config" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Fichier PHP</div>
+    <div class="sec-title">config.php — Le cerveau central</div>
+    <p class="sec-desc">Ce fichier est inclus dans <strong>tous les autres fichiers PHP</strong>. C'est le point de départ de tout. Il définit les paramètres de connexion, les fonctions partagées, et les outils utilisés partout.</p>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">🎯 Principe clé : <span class="hl">require_once</span></div>
+    <p>Chaque fichier PHP commence par <span class="hl">require_once 'config.php'</span>. Ça signifie "inclure ce fichier une seule fois". Ainsi toutes les fonctions et constantes définies ici sont disponibles partout dans l'application.</p>
+  </div>
+
+  <h2>1. Les constantes <span class="hl">define()</span></h2>
+  <p>Les constantes sont des valeurs <strong>fixes qui ne changent jamais</strong> pendant l'exécution. On les définit une fois, on les utilise partout.</p>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">config.php — Constantes de configuration</span></div>
+<pre><span class="cmt">// ── Base de données ──────────────────</span>
+<span class="fn">define</span>(<span class="str">'DB_HOST'</span>,    <span class="str">'localhost'</span>);   <span class="cmt">// Adresse du serveur MySQL</span>
+<span class="fn">define</span>(<span class="str">'DB_NAME'</span>,    <span class="str">'cvmatch_ia'</span>); <span class="cmt">// Nom de la base de données</span>
+<span class="fn">define</span>(<span class="str">'DB_USER'</span>,    <span class="str">'root'</span>);       <span class="cmt">// Utilisateur MySQL</span>
+<span class="fn">define</span>(<span class="str">'DB_PASS'</span>,    <span class="str">''</span>);          <span class="cmt">// Mot de passe (vide en développement)</span>
+<span class="fn">define</span>(<span class="str">'DB_CHARSET'</span>, <span class="str">'utf8mb4'</span>);   <span class="cmt">// Encodage : supporte emojis, accents, etc.</span>
+
+<span class="cmt">// ── API Python (FastAPI) ──────────────</span>
+<span class="fn">define</span>(<span class="str">'PYTHON_API'</span>, <span class="str">'http://localhost:8000'</span>); <span class="cmt">// Adresse de l'API Python</span>
+<span class="fn">define</span>(<span class="str">'API_KEY'</span>,    <span class="str">'cvmatch-secret-2025'</span>);  <span class="cmt">// Clé secrète partagée PHP↔Python</span>
+
+<span class="cmt">// ── Upload ────────────────────────────</span>
+<span class="fn">define</span>(<span class="str">'UPLOAD_DIR'</span>,   <span class="kw">__DIR__</span> . <span class="str">'/uploads/'</span>);  <span class="cmt">// __DIR__ = dossier du fichier actuel</span>
+<span class="fn">define</span>(<span class="str">'MAX_FILE_SIZE'</span>, <span class="num">5</span> * <span class="num">1024</span> * <span class="num">1024</span>);        <span class="cmt">// 5 Mo en bytes (5 × 1024 × 1024)</span>
+<span class="fn">define</span>(<span class="str">'ALLOWED_EXT'</span>,  [<span class="str">'pdf'</span>,<span class="str">'docx'</span>,<span class="str">'jpg'</span>,<span class="str">'jpeg'</span>,<span class="str">'png'</span>]); <span class="cmt">// Extensions autorisées</span></pre>
+  </div>
+
+  <div class="line-block">
+    <div class="line-row">
+      <div class="line-code">__DIR__ . '/uploads/'</div>
+      <div class="line-explain"><strong>__DIR__</strong> est une "constante magique" PHP. Elle contient automatiquement le chemin absolu du dossier où se trouve ce fichier. Exemple : <em>/var/www/cvmatch/public</em>. On y ajoute <em>/uploads/</em> pour obtenir le chemin complet du dossier d'upload.</div>
+    </div>
+    <div class="line-row">
+      <div class="line-code">5 * 1024 * 1024</div>
+      <div class="line-explain"><strong>Calcul de 5 mégaoctets</strong> en bytes. 1 Ko = 1024 bytes. 1 Mo = 1024 Ko = 1024×1024 bytes. 5 Mo = 5×1024×1024 = 5 242 880 bytes. PHP doit comparer la taille du fichier avec ce nombre.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>2. La fonction <span class="hl">db()</span> — Connexion PDO Singleton</h2>
+  <p>PDO (PHP Data Objects) est la façon moderne et sécurisée de parler à MySQL en PHP. Le pattern "Singleton" garantit qu'on ne crée qu'<strong>une seule connexion</strong>, réutilisée à chaque appel.</p>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">Fonction db() — Connexion unique à MySQL</span></div>
+<pre><span class="kw">function</span> <span class="fn">db</span>(): <span class="cls">PDO</span> {
+    <span class="kw">static</span> <span class="var">$pdo</span> = <span class="kw">null</span>;     <span class="cmt">// "static" = mémorisé entre les appels</span>
+    <span class="kw">if</span> (<span class="var">$pdo</span> === <span class="kw">null</span>) {    <span class="cmt">// Si pas encore connecté...</span>
+        <span class="kw">try</span> {
+            <span class="var">$pdo</span> = <span class="kw">new</span> <span class="cls">PDO</span>(
+                <span class="str">'mysql:host='</span>.DB_HOST.<span class="str">';dbname='</span>.DB_NAME.<span class="str">';charset='</span>.DB_CHARSET,
+                DB_USER, DB_PASS,
+                [
+                    <span class="cls">PDO</span>::ATTR_ERRMODE            => <span class="cls">PDO</span>::ERRMODE_EXCEPTION, <span class="cmt">// Lance une exception si erreur SQL</span>
+                    <span class="cls">PDO</span>::ATTR_DEFAULT_FETCH_MODE => <span class="cls">PDO</span>::FETCH_ASSOC,       <span class="cmt">// Résultats en tableau associatif</span>
+                    <span class="cls">PDO</span>::ATTR_EMULATE_PREPARES   => <span class="kw">false</span>,                 <span class="cmt">// Requêtes préparées réelles (sécurité)</span>
+                ]
+            );
+        } <span class="kw">catch</span> (<span class="cls">PDOException</span> <span class="var">$e</span>) {
+            <span class="fn">die</span>(<span class="str">'&lt;div&gt;Erreur MySQL : '</span>.<span class="var">$e</span>-><span class="fn">getMessage</span>().<span class="str">'&lt;/div&gt;'</span>); <span class="cmt">// Arrête tout et affiche l'erreur</span>
+        }
+    }
+    <span class="kw">return</span> <span class="var">$pdo</span>;   <span class="cmt">// Retourne la connexion (neuve ou existante)</span>
+}</pre>
+  </div>
+
+  <div class="grid-2">
+    <div class="explain">
+      <div class="explain-title">💡 C'est quoi "static" ?</div>
+      <p>Normalement, une variable dans une fonction est détruite quand la fonction se termine. Avec <span class="hl">static</span>, la variable <strong>persiste entre les appels</strong>. Ainsi $pdo est créé une fois et réutilisé, évitant de re-connecter à MySQL à chaque fois.</p>
+    </div>
+    <div class="explain">
+      <div class="explain-title">💡 FETCH_ASSOC c'est quoi ?</div>
+      <p>Quand MySQL retourne des données, on peut les recevoir de deux façons. <span class="hl">FETCH_ASSOC</span> donne un tableau avec les noms de colonnes : <span class="hl">['nom' => 'Kouamé', 'email' => '...']</span>. C'est plus lisible que des index numériques.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>3. Les fonctions de session et sécurité</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">Gestion des sessions — Sécurité</span></div>
+<pre><span class="kw">function</span> <span class="fn">startSession</span>(): <span class="kw">void</span> {
+    <span class="kw">if</span> (<span class="fn">session_status</span>() === PHP_SESSION_NONE) {  <span class="cmt">// Si pas encore démarrée</span>
+        <span class="fn">session_start</span>([
+            <span class="str">'cookie_httponly'</span> => <span class="kw">true</span>,    <span class="cmt">// Cookie inaccessible via JavaScript → protection XSS</span>
+            <span class="str">'cookie_samesite'</span> => <span class="str">'Strict'</span>, <span class="cmt">// Cookie envoyé seulement depuis notre site → protection CSRF</span>
+        ]);
+    }
+}
+
+<span class="kw">function</span> <span class="fn">requireLogin</span>(<span class="kw">string</span> <span class="var">$role</span> = <span class="str">''</span>): <span class="kw">void</span> {
+    <span class="fn">startSession</span>();
+    <span class="kw">if</span> (<span class="fn">empty</span>(<span class="var">$_SESSION</span>[<span class="str">'user_id'</span>])) {              <span class="cmt">// Pas connecté ?</span>
+        <span class="fn">header</span>(<span class="str">'Location: index.php'</span>); <span class="fn">exit</span>;        <span class="cmt">// Redirection vers l'accueil</span>
+    }
+    <span class="kw">if</span> (<span class="var">$role</span> && (<span class="var">$_SESSION</span>[<span class="str">'role'</span>] ?? <span class="str">''</span>) !== <span class="var">$role</span>) { <span class="cmt">// Mauvais rôle ?</span>
+        <span class="fn">header</span>(<span class="str">'Location: index.php'</span>); <span class="fn">exit</span>;        <span class="cmt">// Redirection aussi</span>
+    }
+}</pre>
+  </div>
+
+  <div class="warn">
+    <div class="warn-title">🔐 Sécurité importante</div>
+    <p>La fonction <span class="hl">requireLogin('recruteur')</span> en haut du dashboard_recruteur.php garantit qu'un candidat ne peut <strong>jamais</strong> accéder à l'espace recruteur même s'il tape l'URL directement dans son navigateur. C'est une vérification côté serveur, impossible à contourner côté navigateur.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>4. La fonction <span class="hl">callAPI()</span> — Communication PHP→Python</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">cURL — Appel de l'API Python depuis PHP</span></div>
+<pre><span class="kw">function</span> <span class="fn">callAPI</span>(<span class="kw">string</span> <span class="var">$route</span>, <span class="kw">array</span> <span class="var">$data</span> = [], <span class="kw">string</span> <span class="var">$method</span> = <span class="str">'POST'</span>): ?<span class="kw">array</span> {
+    <span class="var">$url</span> = PYTHON_API . <span class="var">$route</span>;          <span class="cmt">// Ex: http://localhost:8000/candidats/upload/42</span>
+    <span class="var">$ch</span>  = <span class="fn">curl_init</span>(<span class="var">$url</span>);             <span class="cmt">// Initialise une requête HTTP</span>
+    <span class="fn">curl_setopt_array</span>(<span class="var">$ch</span>, [
+        CURLOPT_RETURNTRANSFER => <span class="kw">true</span>,  <span class="cmt">// Retourner la réponse (pas l'afficher)</span>
+        CURLOPT_POST           => <span class="kw">true</span>,  <span class="cmt">// Méthode POST</span>
+        CURLOPT_POSTFIELDS     => <span class="fn">json_encode</span>(<span class="var">$data</span>),  <span class="cmt">// Corps de la requête en JSON</span>
+        CURLOPT_HTTPHEADER     => [
+            <span class="str">'Content-Type: application/json'</span>,     <span class="cmt">// On envoie du JSON</span>
+            <span class="str">'X-API-Key: '</span> . API_KEY,              <span class="cmt">// Clé secrète d'authentification</span>
+        ],
+        CURLOPT_TIMEOUT        => <span class="num">60</span>,     <span class="cmt">// Abandon si pas de réponse en 60 secondes</span>
+    ]);
+    <span class="var">$resp</span> = <span class="fn">curl_exec</span>(<span class="var">$ch</span>);             <span class="cmt">// Envoie la requête et attend la réponse</span>
+    <span class="var">$code</span> = <span class="fn">curl_getinfo</span>(<span class="var">$ch</span>, CURLINFO_HTTP_CODE); <span class="cmt">// Récupère le code HTTP (200, 404...)</span>
+    <span class="fn">curl_close</span>(<span class="var">$ch</span>);                    <span class="cmt">// Ferme la connexion</span>
+    <span class="kw">if</span> (<span class="var">$code</span> !== <span class="num">200</span> || !<span class="var">$resp</span>) <span class="kw">return</span> <span class="kw">null</span>; <span class="cmt">// Erreur → retourner null</span>
+    <span class="kw">return</span> <span class="fn">json_decode</span>(<span class="var">$resp</span>, <span class="kw">true</span>);  <span class="cmt">// Convertit la réponse JSON en tableau PHP</span>
+}</pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 cURL, c'est quoi ?</div>
+    <p>cURL est une bibliothèque qui permet à PHP de faire des requêtes HTTP, exactement comme un navigateur. Quand tu vas sur google.com, ton navigateur fait une requête GET. Ici, PHP fait une requête POST vers l'API Python — même principe, mais depuis le code serveur.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>5. La fonction <span class="hl">uploadCV()</span> — Sécurisation des uploads</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">Upload sécurisé de fichiers</span></div>
+<pre><span class="kw">function</span> <span class="fn">uploadCV</span>(<span class="kw">array</span> <span class="var">$file</span>, <span class="kw">int</span> <span class="var">$userId</span>): <span class="kw">array</span> {
+    <span class="var">$ext</span> = <span class="fn">strtolower</span>(<span class="fn">pathinfo</span>(<span class="var">$file</span>[<span class="str">'name'</span>], PATHINFO_EXTENSION)); <span class="cmt">// Extrait 'pdf' de 'monCV.PDF'</span>
+    <span class="kw">if</span> (!<span class="fn">in_array</span>(<span class="var">$ext</span>, ALLOWED_EXT)) {
+        <span class="kw">return</span> [<span class="str">'ok'</span>=><span class="kw">false</span>, <span class="str">'error'</span>=><span class="str">'Format non autorisé'</span>];     <span class="cmt">// Rejette les fichiers non-autorisés</span>
+    }
+    <span class="kw">if</span> (<span class="var">$file</span>[<span class="str">'size'</span>] > MAX_FILE_SIZE) {
+        <span class="kw">return</span> [<span class="str">'ok'</span>=><span class="kw">false</span>, <span class="str">'error'</span>=><span class="str">'Fichier trop volumineux'</span>];   <span class="cmt">// Rejette les fichiers > 5 Mo</span>
+    }
+    <span class="cmt">// Génère un nom unique pour éviter les collisions</span>
+    <span class="var">$nom</span> = <span class="str">'cv_'</span> . <span class="var">$userId</span> . <span class="str">'_'</span> . <span class="fn">time</span>() . <span class="str">'.'</span> . <span class="var">$ext</span>; <span class="cmt">// Ex: cv_42_1718000000.pdf</span>
+    <span class="var">$dest</span> = UPLOAD_DIR . <span class="var">$nom</span>;
+    <span class="kw">if</span> (!<span class="fn">move_uploaded_file</span>(<span class="var">$file</span>[<span class="str">'tmp_name'</span>], <span class="var">$dest</span>)) { <span class="cmt">// Déplace depuis le dossier temp</span>
+        <span class="kw">return</span> [<span class="str">'ok'</span>=><span class="kw">false</span>, <span class="str">'error'</span>=><span class="str">'Erreur enregistrement'</span>];
+    }
+    <span class="kw">return</span> [<span class="str">'ok'</span>=><span class="kw">true</span>, <span class="str">'nom'</span>=><span class="var">$nom</span>, <span class="str">'ext'</span>=><span class="var">$ext</span>];          <span class="cmt">// Succès</span>
+}</pre>
+  </div>
+
+  <div class="warn">
+    <div class="warn-title">🛡️ Pourquoi renommer le fichier ?</div>
+    <p>Un utilisateur malveillant pourrait uploader un fichier nommé <span class="hl">hacker.php</span>. Si on garde le nom original, l'attaquant pourrait accéder à <em>monsite.com/uploads/hacker.php</em> et exécuter du code dangereux. En renommant avec <span class="hl">cv_{userId}_{time}.ext</span>, on élimine ce risque.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : BASE DE DONNÉES -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-db" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">SQL</div>
+    <div class="sec-title">database.sql — La structure des données</div>
+    <p class="sec-desc">La base de données est le fondement de tout. Chaque table est comme une feuille Excel : des colonnes bien définies et des lignes de données. Voici les 6 tables du projet.</p>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 C'est quoi une base de données relationnelle ?</div>
+    <p>Imagine une série de tableaux interconnectés. La table <span class="hl">candidats</span> stocke les infos des candidats. La table <span class="hl">cv_files</span> stocke les CV et <strong>référence</strong> la table candidats via une colonne <span class="hl">candidat_id</span>. C'est comme ça qu'on sait "ce CV appartient à tel candidat".</p>
+  </div>
+
+  <h2>📊 Vue d'ensemble des 6 tables</h2>
+
+  <div class="grid-2">
+    <div class="file-card">
+      <div class="file-card-header">
+        <span class="file-badge badge-sql">TABLE</span>
+        <div><div class="file-name">candidats</div><div class="file-desc">Les comptes des candidats inscrits</div></div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Colonne</th><th>Type</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>INT AUTO_INCREMENT</td><td>Identifiant unique, auto-incrémenté</td></tr>
+          <tr><td>nom, prenom</td><td>VARCHAR(100)</td><td>Nom complet du candidat</td></tr>
+          <tr><td>email</td><td>VARCHAR(180) UNIQUE</td><td>Email, ne peut pas être dupliqué</td></tr>
+          <tr><td>password_hash</td><td>VARCHAR(255)</td><td>Mot de passe crypté (jamais en clair!)</td></tr>
+          <tr><td>ville, telephone</td><td>VARCHAR</td><td>Localisation et contact</td></tr>
+          <tr><td>annees_exp</td><td>TINYINT</td><td>Années d'expérience (0-255)</td></tr>
+          <tr><td>competences</td><td>TEXT</td><td>Compétences séparées par virgules</td></tr>
+          <tr><td>intitule_poste</td><td>VARCHAR(200)</td><td>Titre du poste souhaité</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="file-card">
+      <div class="file-card-header">
+        <span class="file-badge badge-sql">TABLE</span>
+        <div><div class="file-name">cv_files</div><div class="file-desc">Les fichiers CV + données IA</div></div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Colonne</th><th>Type</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>candidat_id</td><td>INT (NULL ok)</td><td>Lien vers candidats.id. NULL = profil externe</td></tr>
+          <tr><td>nom_fichier</td><td>VARCHAR(255)</td><td>Nom du fichier sur le disque</td></tr>
+          <tr><td>texte_brut</td><td>LONGTEXT</td><td>Texte extrait du CV (par Python)</td></tr>
+          <tr><td>embedding_json</td><td>MEDIUMTEXT</td><td>Vecteur numérique du CV (384 nombres)</td></tr>
+          <tr><td>competences</td><td>JSON</td><td>Tableau de compétences extrait par IA</td></tr>
+          <tr><td>annees_exp</td><td>TINYINT</td><td>Années d'expérience détectées dans le CV</td></tr>
+          <tr><td>mtime</td><td>BIGINT</td><td>Timestamp pour détecter les modifications</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="file-card">
+      <div class="file-card-header">
+        <span class="file-badge badge-sql">TABLE</span>
+        <div><div class="file-name">messages</div><div class="file-desc">Messagerie interne recruteur↔candidat</div></div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Colonne</th><th>Type</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>from_user_id</td><td>INT</td><td>ID de l'expéditeur</td></tr>
+          <tr><td>from_role</td><td>ENUM</td><td>'recruteur' ou 'candidat'</td></tr>
+          <tr><td>to_user_id</td><td>INT</td><td>ID du destinataire</td></tr>
+          <tr><td>sujet, corps</td><td>TEXT</td><td>Contenu du message</td></tr>
+          <tr><td>lu</td><td>TINYINT(1)</td><td>0 = non lu, 1 = lu (booléen en SQL)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="file-card">
+      <div class="file-card-header">
+        <span class="file-badge badge-sql">TABLE</span>
+        <div><div class="file-name">conversation_history</div><div class="file-desc">Historique des conversations IA</div></div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Colonne</th><th>Type</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>session_id</td><td>VARCHAR(64)</td><td>UUID unique identifiant une session de chat</td></tr>
+          <tr><td>recruteur_id</td><td>INT</td><td>Quel recruteur a initié cette conversation</td></tr>
+          <tr><td>role</td><td>ENUM</td><td>'utilisateur' ou 'assistant'</td></tr>
+          <tr><td>message</td><td>TEXT</td><td>Le contenu du message</td></tr>
+          <tr><td>profils_json</td><td>MEDIUMTEXT</td><td>Les profils candidats de ce moment</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>🔗 Les relations entre tables (FOREIGN KEY)</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">SQL</span><span class="code-title">Clé étrangère — Lien entre cv_files et candidats</span></div>
+<pre><span class="kw">FOREIGN KEY</span> (candidat_id) <span class="kw">REFERENCES</span> candidats(id) <span class="kw">ON DELETE CASCADE</span></pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 ON DELETE CASCADE — c'est quoi ?</div>
+    <p>Si on supprime un candidat de la table <span class="hl">candidats</span>, tous ses CV dans la table <span class="hl">cv_files</span> sont <strong>automatiquement supprimés aussi</strong>. Sans ça, on aurait des orphelins : des CV qui référencent un candidat inexistant, ce qui créerait des bugs.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>👁️ La vue SQL <span class="hl">vue_candidats_complets</span></h2>
+
+  <p>Une "vue" est comme une <strong>requête enregistrée sous un nom</strong>. Elle simplifie les requêtes complexes.</p>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">SQL</span><span class="code-title">Vue — Jointure candidats + leur dernier CV</span></div>
+<pre><span class="kw">CREATE OR REPLACE VIEW</span> vue_candidats_complets <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+  c.id, c.nom, c.prenom, c.email, c.ville, c.annees_exp,
+  cv.id       <span class="kw">AS</span> cv_id,
+  cv.nom_fichier,
+  cv.texte_brut,
+  cv.embedding_json    <span class="cmt">-- Le vecteur IA du CV</span>
+<span class="kw">FROM</span> candidats c
+<span class="kw">LEFT JOIN</span> cv_files cv <span class="kw">ON</span> cv.candidat_id = c.id
+  <span class="kw">AND</span> cv.id = (
+    <span class="kw">SELECT MAX</span>(cv2.id) <span class="kw">FROM</span> cv_files cv2 <span class="kw">WHERE</span> cv2.candidat_id = c.id
+  );  <span class="cmt">-- Sous-requête : récupère seulement le DERNIER CV de chaque candidat</span></pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 LEFT JOIN vs JOIN</div>
+    <p><span class="hl">JOIN</span> (ou INNER JOIN) retourne seulement les candidats <strong>qui ont un CV</strong>. <span class="hl">LEFT JOIN</span> retourne <strong>tous les candidats</strong>, même ceux sans CV (leur colonne cv_id sera NULL). On choisit LEFT JOIN pour voir tous les inscrits, y compris ceux qui n'ont pas encore uploadé de CV.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>🔐 Pourquoi les mots de passe ne sont pas stockés en clair ?</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">Hachage et vérification du mot de passe</span></div>
+<pre><span class="cmt">// Lors de l'inscription :</span>
+<span class="var">$hash</span> = <span class="fn">password_hash</span>(<span class="var">$pass</span>, PASSWORD_BCRYPT);
+<span class="cmt">// $hash = "$2y$10$ABCDEFGHIJK..." (chaîne illisible, irréversible)</span>
+<span class="cmt">// Stocké en base. JAMAIS le mot de passe original.</span>
+
+<span class="cmt">// Lors de la connexion :</span>
+<span class="kw">if</span> (<span class="fn">password_verify</span>(<span class="var">$pass</span>, <span class="var">$u</span>[<span class="str">'password_hash'</span>])) {
+    <span class="cmt">// Connexion autorisée — PHP compare sans jamais déchiffrer</span>
+}</pre>
+  </div>
+
+  <div class="warn">
+    <div class="warn-title">🛡️ Sécurité fondamentale</div>
+    <p>BCrypt est un algorithme de hachage à sens unique. On ne peut <strong>pas retrouver</strong> le mot de passe à partir du hash. Même si un hacker vole la base de données, il ne peut pas lire les mots de passe. <span class="hl">password_verify()</span> refait le calcul et compare les résultats.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : AUTHENTIFICATION -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-auth" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">PHP</div>
+    <div class="sec-title">login_candidat.php & login_recruteur.php</div>
+    <p class="sec-desc">Ces fichiers gèrent l'inscription et la connexion des utilisateurs. Ils utilisent le même principe : traitement du formulaire en PHP côté serveur, puis affichage HTML côté client.</p>
+  </div>
+
+  <h2>🔄 Principe du formulaire PHP (POST/GET)</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">L'utilisateur visite la page (GET)</div>
+        <div class="step-body">Le navigateur envoie une requête GET. PHP affiche le formulaire HTML vide. <span class="hl">$_SERVER['REQUEST_METHOD'] === 'GET'</span> à ce moment.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">L'utilisateur soumet le formulaire (POST)</div>
+        <div class="step-body">Le navigateur envoie une requête POST avec les données du formulaire. <span class="hl">$_SERVER['REQUEST_METHOD'] === 'POST'</span>. PHP entre dans le bloc <span class="hl">if</span> de traitement.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">PHP valide les données</div>
+        <div class="step-body">Vérifie que l'email est valide, que les champs sont remplis, que le mot de passe est assez long. En cas d'erreur, il stocke le message dans <span class="hl">$error</span>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">PHP crée/vérifie le compte et redirige</div>
+        <div class="step-body">Si tout est ok : insère en BDD (inscription) ou vérifie le hash (connexion). Puis stocke l'identité dans <span class="hl">$_SESSION</span> et redirige vers le dashboard.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">login_candidat.php — Logique d'inscription complète</span></div>
+<pre><span class="kw">if</span> (<span class="var">$_SERVER</span>[<span class="str">'REQUEST_METHOD'</span>]===<span class="str">'POST'</span>) {
+    <span class="var">$action</span> = <span class="var">$_POST</span>[<span class="str">'action'</span>] ?? <span class="str">''</span>;  <span class="cmt">// 'register' ou 'login' selon le bouton cliqué</span>
+
+    <span class="kw">if</span> (<span class="var">$action</span>===<span class="str">'register'</span>) {
+        <span class="cmt">// Lecture et nettoyage des données</span>
+        <span class="var">$email</span>  = <span class="fn">trim</span>(<span class="var">$_POST</span>[<span class="str">'email'</span>] ?? <span class="str">''</span>);    <span class="cmt">// trim() enlève les espaces avant/après</span>
+        <span class="var">$pass</span>   = <span class="var">$_POST</span>[<span class="str">'password'</span>]   ?? <span class="str">''</span>;
+        <span class="var">$pass2</span>  = <span class="var">$_POST</span>[<span class="str">'password2'</span>]  ?? <span class="str">''</span>;
+
+        <span class="cmt">// Validations en cascade</span>
+        <span class="kw">if</span> (!<span class="fn">filter_var</span>(<span class="var">$email</span>, FILTER_VALIDATE_EMAIL)) { <span class="cmt">// Vérifie format email</span>
+            <span class="var">$error</span> = <span class="str">'Email invalide.'</span>;
+        } <span class="kw">elseif</span> (<span class="fn">strlen</span>(<span class="var">$pass</span>) < <span class="num">6</span>) {   <span class="cmt">// Minimum 6 caractères</span>
+            <span class="var">$error</span> = <span class="str">'Mot de passe trop court.'</span>;
+        } <span class="kw">elseif</span> (<span class="var">$pass</span> !== <span class="var">$pass2</span>) {    <span class="cmt">// Les deux mots de passe doivent correspondre</span>
+            <span class="var">$error</span> = <span class="str">'Mots de passe différents.'</span>;
+        } <span class="kw">else</span> {
+            <span class="cmt">// Vérifier si l'email est déjà utilisé (UNIQUE en BDD)</span>
+            <span class="var">$check</span> = <span class="fn">db</span>()-><span class="fn">prepare</span>(<span class="str">"SELECT id FROM candidats WHERE email=? LIMIT 1"</span>);
+            <span class="var">$check</span>-><span class="fn">execute</span>([<span class="var">$email</span>]);    <span class="cmt">// ? remplacé par $email — protection injection SQL</span>
+            <span class="kw">if</span> (<span class="var">$check</span>-><span class="fn">fetch</span>()) {
+                <span class="var">$error</span> = <span class="str">'Email déjà utilisé.'</span>;
+            } <span class="kw">else</span> {
+                <span class="var">$hash</span> = <span class="fn">password_hash</span>(<span class="var">$pass</span>, PASSWORD_BCRYPT); <span class="cmt">// Hachage sécurisé</span>
+                <span class="var">$stmt</span> = <span class="fn">db</span>()-><span class="fn">prepare</span>(<span class="str">"INSERT INTO candidats (nom,prenom,email,password_hash) VALUES(?,?,?,?)"</span>);
+                <span class="var">$stmt</span>-><span class="fn">execute</span>([<span class="var">$nom</span>, <span class="var">$prenom</span>, <span class="var">$email</span>, <span class="var">$hash</span>]);  <span class="cmt">// Insère en base</span>
+                <span class="var">$id</span> = (<span class="kw">int</span>)<span class="fn">db</span>()-><span class="fn">lastInsertId</span>();    <span class="cmt">// Récupère l'ID du nouveau candidat</span>
+                <span class="var">$_SESSION</span>[<span class="str">'user_id'</span>] = <span class="var">$id</span>;         <span class="cmt">// Mémorise l'ID en session</span>
+                <span class="var">$_SESSION</span>[<span class="str">'role'</span>]    = <span class="str">'candidat'</span>;  <span class="cmt">// Mémorise le rôle</span>
+                <span class="fn">header</span>(<span class="str">'Location: dashboard_candidat.php'</span>); <span class="fn">exit</span>; <span class="cmt">// Redirection</span>
+            }
+        }
+    }
+}</pre>
+  </div>
+
+  <div class="info">
+    <div class="info-title">📚 Qu'est-ce qu'une SESSION PHP ?</div>
+    <p>Une session PHP est comme un <strong>badge d'accès temporaire</strong>. Quand tu te connectes, PHP crée un identifiant unique (ex: <em>abc123xyz</em>) stocké dans un cookie dans ton navigateur. Sur le serveur, PHP retient que <em>abc123xyz</em> correspond à l'utilisateur ID=42, rôle=candidat. À chaque page visitée, PHP vérifie ce badge. <span class="hl">$_SESSION['user_id']</span> est la façon d'accéder à ces informations.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>🔑 Le système de tabs JavaScript</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><span class="code-title">Basculer entre l'onglet Inscription et Connexion</span></div>
+<pre><span class="kw">function</span> <span class="fn">switchTab</span>(t) {
+    <span class="cmt">// Affiche le bon panneau selon le tab cliqué</span>
+    document.<span class="fn">getElementById</span>(<span class="str">'panel-register'</span>).style.display = t===<span class="str">'register'</span> ? <span class="str">'block'</span> : <span class="str">'none'</span>;
+    document.<span class="fn">getElementById</span>(<span class="str">'panel-login'</span>).style.display   = t===<span class="str">'login'</span>    ? <span class="str">'block'</span> : <span class="str">'none'</span>;
+
+    <span class="cmt">// Met à jour le style des boutons onglets (active/inactive)</span>
+    document.<span class="fn">querySelectorAll</span>(<span class="str">'.auth-tab'</span>).<span class="fn">forEach</span>((b, i) => {
+        b.classList.<span class="fn">toggle</span>(<span class="str">'active'</span>,
+            (t===<span class="str">'register'</span> && i===<span class="num">0</span>) || (t===<span class="str">'login'</span> && i===<span class="num">1</span>)
+        );
+        <span class="cmt">// toggle('active', condition) : ajoute 'active' si condition vraie, sinon l'enlève</span>
+    });
+}</pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 L'opérateur ternaire <span class="hl">? :</span></div>
+    <p><span class="hl">condition ? valeurSiVrai : valeurSiFaux</span> — c'est un raccourci pour if/else. Par exemple : <span class="hl">t==='register' ? 'block' : 'none'</span> signifie "si t est 'register', retourner 'block', sinon retourner 'none'".</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : DASHBOARDS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-dashboard" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">PHP + JavaScript</div>
+    <div class="sec-title">dashboard_candidat.php & dashboard_recruteur.php</div>
+    <p class="sec-desc">Ces deux fichiers sont les interfaces principales de l'application. Chacun mélange du PHP côté serveur (pour les données) et du JavaScript côté client (pour l'interactivité).</p>
+  </div>
+
+  <h2>📋 Dashboard Candidat — Trois pages en une</h2>
+  <p>Le dashboard candidat est une SPA (Single Page Application) miniature : une seule page HTML qui affiche trois "vues" différentes sans rechargement de page.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(99,210,190,.15)">👤</div><div class="card-title">Page Profil</div></div>
+      <p>Formulaire d'édition du profil. Affiche les compétences extraites par l'IA depuis le CV. Les champs Prénom/Nom sont désactivés (ne peuvent être modifiés).</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(240,180,41,.15)">📄</div><div class="card-title">Page CV</div></div>
+      <p>Zone de dépôt de fichier avec drag-and-drop. Affiche le CV actuel s'il existe. Après upload, appelle l'API Python pour indexer le CV.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(167,139,250,.15)">✉️</div><div class="card-title">Page Messages</div></div>
+      <p>Charge les messages en JavaScript via <span class="hl">fetch('get_messages.php')</span>. Les messages non-lus ont une bordure colorée. Chargement dynamique sans rechargement de page.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">Début du dashboard_candidat.php — Données PHP initiales</span></div>
+<pre><span class="kw">require_once</span> <span class="str">'config.php'</span>;
+<span class="fn">requireLogin</span>(<span class="str">'candidat'</span>);  <span class="cmt">// Si pas connecté ou pas candidat → redirection</span>
+
+<span class="var">$user_id</span> = (<span class="kw">int</span>)<span class="var">$_SESSION</span>[<span class="str">'user_id'</span>];  <span class="cmt">// Cast en entier pour la sécurité</span>
+
+<span class="cmt">// Générer les initiales pour l'avatar (ex: "KA" pour "Kouamé Assi")</span>
+<span class="var">$initiales</span> = <span class="fn">implode</span>(<span class="str">''</span>, <span class="fn">array_map</span>(
+    <span class="kw">fn</span>(<span class="var">$w</span>) => <span class="fn">strtoupper</span>(<span class="var">$w</span>[<span class="num">0</span>] ?? <span class="str">''</span>),     <span class="cmt">// Prend la 1ère lettre de chaque mot, en majuscule</span>
+    <span class="fn">array_filter</span>(<span class="fn">explode</span>(<span class="str">' '</span>, <span class="var">$nom_complet</span>)) <span class="cmt">// Sépare par espaces, filtre les vides</span>
+));
+
+<span class="cmt">// Charger le profil depuis la BDD</span>
+<span class="var">$stmt</span> = <span class="fn">db</span>()-><span class="fn">prepare</span>(<span class="str">"SELECT * FROM candidats WHERE id=? LIMIT 1"</span>);
+<span class="var">$stmt</span>-><span class="fn">execute</span>([<span class="var">$user_id</span>]);
+<span class="var">$profil</span> = <span class="var">$stmt</span>-><span class="fn">fetch</span>() ?: [];  <span class="cmt">// ?: [] → si null, utiliser un tableau vide</span>
+
+<span class="cmt">// Compétences IA extraites du CV</span>
+<span class="var">$tags_ia</span> = [];
+<span class="kw">if</span> (!<span class="fn">empty</span>(<span class="var">$cv_actuel</span>[<span class="str">'competences'</span>])) {
+    <span class="var">$decoded</span> = <span class="fn">json_decode</span>(<span class="var">$cv_actuel</span>[<span class="str">'competences'</span>], <span class="kw">true</span>); <span class="cmt">// JSON → tableau PHP</span>
+    <span class="kw">if</span> (<span class="fn">is_array</span>(<span class="var">$decoded</span>)) <span class="var">$tags_ia</span> = <span class="var">$decoded</span>;
+}</pre>
+  </div>
+
+  <h3>Traitement de l'upload de CV</h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">PHP</span><span class="code-title">Upload CV dans dashboard_candidat.php</span></div>
+<pre><span class="kw">if</span> (<span class="var">$action</span>===<span class="str">'upload_cv'</span> && <span class="fn">isset</span>(<span class="var">$_FILES</span>[<span class="str">'cv_file'</span>])) {
+    <span class="var">$upload</span> = <span class="fn">uploadCV</span>(<span class="var">$_FILES</span>[<span class="str">'cv_file'</span>], <span class="var">$user_id</span>); <span class="cmt">// Fonction de config.php</span>
+    <span class="kw">if</span> (<span class="var">$upload</span>[<span class="str">'ok'</span>]) {
+        <span class="cmt">// 1. Enregistrer le fichier en base de données</span>
+        <span class="fn">db</span>()-><span class="fn">prepare</span>(<span class="str">"INSERT INTO cv_files (candidat_id, nom_fichier, ...) VALUES (?, ?, ...)"</span>)
+             -><span class="fn">execute</span>([<span class="var">$user_id</span>, <span class="var">$upload</span>[<span class="str">'nom'</span>], ...]);
+
+        <span class="cmt">// 2. Appeler l'API Python pour indexer le CV (extraction texte + IA)</span>
+        <span class="fn">callAPI</span>(<span class="str">'/candidats/upload/'</span>.<span class="var">$user_id</span>, []); <span class="cmt">// Asynchrone — peut prendre 5-10s</span>
+
+        <span class="fn">header</span>(<span class="str">'Location: dashboard_candidat.php?success=cv'</span>); <span class="fn">exit</span>;
+    } <span class="kw">else</span> {
+        <span class="var">$error</span> = <span class="var">$upload</span>[<span class="str">'error'</span>];  <span class="cmt">// Message d'erreur de uploadCV()</span>
+    }
+}</pre>
+  </div>
+
+  <hr class="divider">
+  <h2>🔍 Dashboard Recruteur — Le cœur du système</h2>
+
+  <h3>La fonction <span class="hl">runSearch()</span></h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><span class="code-title">Recherche IA — Communication avec l'API Python</span></div>
+<pre><span class="kw">async function</span> <span class="fn">runSearch</span>() {
+    <span class="kw">const</span> q = document.<span class="fn">getElementById</span>(<span class="str">'searchInput'</span>).value.<span class="fn">trim</span>();
+    <span class="kw">if</span> (!q) { <span class="fn">showToast</span>(<span class="str">'Saisissez une requête'</span>, <span class="str">'error'</span>); <span class="kw">return</span>; }
+
+    <span class="cmt">// Envoie la requête DIRECTEMENT à l'API Python (pas via PHP!)</span>
+    <span class="kw">const</span> resp = <span class="kw">await</span> <span class="fn">fetch</span>(API_BASE + <span class="str">'/recherche'</span>, {  <span class="cmt">// API_BASE = 'http://localhost:8000'</span>
+        method: <span class="str">'POST'</span>,
+        headers: {
+            <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>,
+            <span class="str">'X-API-Key'</span>: API_KEY   <span class="cmt">// Clé secrète pour authentifier la requête</span>
+        },
+        body: <span class="cls">JSON</span>.<span class="fn">stringify</span>({ texte_requete: q })  <span class="cmt">// Convertit objet JS → chaîne JSON</span>
+    });
+
+    <span class="kw">const</span> data = <span class="kw">await</span> resp.<span class="fn">json</span>();   <span class="cmt">// Convertit la réponse JSON → objet JS</span>
+    currentResults = data.profils || [];  <span class="cmt">// Stocke les résultats dans une variable globale</span>
+
+    <span class="fn">renderResults</span>(currentResults, q); <span class="cmt">// Affiche les cartes candidats</span>
+}</pre>
+  </div>
+
+  <div class="warn">
+    <div class="warn-title">⚡ Async/Await — C'est quoi ?</div>
+    <p>En JavaScript, les appels réseau prennent du temps (quelques secondes). Sans <span class="hl">async/await</span>, le code continuerait à s'exécuter pendant l'attente et essaierait d'afficher des résultats inexistants. <span class="hl">await</span> dit "attends que la réponse arrive avant de continuer". <span class="hl">async</span> devant la fonction indique qu'elle contient des <span class="hl">await</span>.</p>
+  </div>
+
+  <h3>La fonction <span class="hl">renderResults()</span> — Affichage des cartes candidats</h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><span class="code-title">Génération dynamique des cartes HTML</span></div>
+<pre><span class="kw">function</span> <span class="fn">renderResults</span>(profils, query) {
+    <span class="cmt">// profils est un tableau d'objets, ex: [{nom:'Assi', score:87, competences:['PHP','MySQL']}]</span>
+
+    <span class="kw">const</span> html = profils.<span class="fn">map</span>((p, i) => {      <span class="cmt">// .map() : transforme chaque profil en HTML</span>
+        <span class="kw">const</span> nom = (p.prenom || <span class="str">''</span>) + <span class="str">' '</span> + (p.nom || <span class="str">''</span>);
+        <span class="kw">const</span> score = <span class="cls">Math</span>.<span class="fn">round</span>(p.score || <span class="num">0</span>);
+        <span class="kw">const</span> detail = p._score_detail || {};   <span class="cmt">// Détail des 4 critères de score</span>
+
+        <span class="kw">return</span> <span class="str">`&lt;div class="candidate-card ${i===0?'rank-1':''}"&gt;
+            &lt;div class="c-name"&gt;${nom}&lt;/div&gt;
+            &lt;span class="score-pill ${</span><span class="fn">scoreClass</span>(score)<span class="str">}"&gt;${score}%&lt;/span&gt;
+            &lt;div class="c-ia"&gt;${p.resume_ia}&lt;/div&gt;   // Résumé généré par Groq IA
+            &lt;!-- Détail des scores --&gt;
+            Sémantique: ${</span><span class="cls">Math</span>.<span class="fn">round</span>(detail.semantique||<span class="num">0</span>)<span class="str">}%
+            Compétences: ${</span><span class="cls">Math</span>.<span class="fn">round</span>(detail.competences||<span class="num">0</span>)<span class="str">}%
+        &lt;/div&gt;`</span>;
+    }).<span class="fn">join</span>(<span class="str">''</span>);   <span class="cmt">// .join('') : fusionne tous les morceaux HTML en une seule chaîne</span>
+
+    document.<span class="fn">getElementById</span>(<span class="str">'cardsGrid'</span>).innerHTML = html; <span class="cmt">// Injecte dans la page</span>
+}</pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Template Literals (backticks)</div>
+    <p>Les backticks <span class="hl">`...`</span> permettent d'écrire du HTML sur plusieurs lignes avec des variables insérées via <span class="hl">${variable}</span>. C'est la syntaxe moderne en JavaScript pour construire des chaînes complexes. Bien plus lisible que la concaténation avec <span class="hl">+</span>.</p>
+  </div>
+
+  <h3>Le Chat IA intégré</h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">JavaScript</span><span class="code-title">sendChat() — Envoi d'un message à l'agent IA</span></div>
+<pre><span class="kw">async function</span> <span class="fn">sendChat</span>() {
+    <span class="kw">const</span> msg = document.<span class="fn">getElementById</span>(<span class="str">'chatInput'</span>).value.<span class="fn">trim</span>();
+
+    chatHistory.<span class="fn">push</span>({ role: <span class="str">'user'</span>, content: msg });  <span class="cmt">// Mémorise le message</span>
+
+    <span class="kw">const</span> resp = <span class="kw">await</span> <span class="fn">fetch</span>(API_BASE + <span class="str">'/conversation/chat'</span>, {
+        method: <span class="str">'POST'</span>,
+        headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>, <span class="str">'X-API-Key'</span>: API_KEY },
+        body: <span class="cls">JSON</span>.<span class="fn">stringify</span>({
+            message: msg,
+            historique: chatHistory,         <span class="cmt">// Tout l'historique envoyé à chaque fois!</span>
+            derniers_profils: currentResults, <span class="cmt">// Les candidats actuels pour contexte</span>
+            session_id: sessionId,            <span class="cmt">// Pour sauvegarder en BDD</span>
+            recruteur_id: <span class="num"><?= (int)$_SESSION['user_id'] ?></span>  <span class="cmt">// PHP injecte l'ID</span>
+        })
+    });
+    <span class="kw">const</span> data = <span class="kw">await</span> resp.<span class="fn">json</span>();
+    <span class="cmt">// Affiche la réponse de l'IA dans la bulle de chat</span>
+}</pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Pourquoi envoyer tout l'historique ?</div>
+    <p>L'IA (LLM) n'a <strong>aucune mémoire</strong> entre deux appels. À chaque message, on lui renvoie toute la conversation depuis le début pour qu'elle ait le contexte. C'est comme envoyer une lettre : à chaque réponse, on recopie toute la conversation précédente.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : API PYTHON -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-api" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Python / FastAPI</div>
+    <div class="sec-title">main.py, db.py, routes/ — L'API Python</div>
+    <p class="sec-desc">L'API Python est le moteur de traitement de l'application. Elle tourne en permanence sur le port 8000 et répond aux requêtes de PHP et du navigateur.</p>
+  </div>
+
+  <h2>🚀 main.py — Le point d'entrée</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">main.py — Création et configuration de l'application FastAPI</span></div>
+<pre><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="kw">from</span> fastapi.middleware.cors <span class="kw">import</span> CORSMiddleware
+<span class="kw">from</span> routes <span class="kw">import</span> candidats, recherche, conversation  <span class="cmt"># Importe les 3 modules de routes</span>
+
+app = <span class="fn">FastAPI</span>(title=<span class="str">"CVMatch IA API"</span>, version=<span class="str">"3.0.0"</span>)  <span class="cmt"># Crée l'application</span>
+
+<span class="cmt"># CORS : autoriser le navigateur à appeler cette API depuis une autre origine</span>
+app.<span class="fn">add_middleware</span>(
+    CORSMiddleware,
+    allow_origins=[<span class="str">"http://localhost"</span>, <span class="str">"http://127.0.0.1"</span>],  <span class="cmt"># Origines autorisées</span>
+    allow_methods=[<span class="str">"*"</span>],   <span class="cmt"># Toutes les méthodes HTTP (GET, POST...)</span>
+    allow_headers=[<span class="str">"*"</span>],   <span class="cmt"># Tous les en-têtes HTTP</span>
+)
+
+<span class="cmt"># Enregistre les routes de chaque module</span>
+app.<span class="fn">include_router</span>(candidats.router)   <span class="cmt"># /candidats/upload/{id}</span>
+app.<span class="fn">include_router</span>(recherche.router)   <span class="cmt"># /recherche</span>
+app.<span class="fn">include_router</span>(conversation.router) <span class="cmt"># /conversation/chat et /conversation/historique</span>
+
+<span class="cmt"># Route de santé — pour vérifier que tout fonctionne</span>
+<span class="kw">@app</span>.get(<span class="str">"/sante"</span>)
+<span class="kw">def</span> <span class="fn">sante</span>():
+    <span class="kw">try</span>:
+        conn = <span class="fn">get_conn</span>(); conn.<span class="fn">close</span>(); bdd_ok = <span class="kw">True</span>
+    <span class="kw">except</span>:
+        bdd_ok = <span class="kw">False</span>
+    <span class="kw">return</span> {<span class="str">"statut"</span>: <span class="str">"ok"</span>, <span class="str">"bdd_connectee"</span>: bdd_ok}  <span class="cmt"># JSON automatique avec FastAPI</span></pre>
+  </div>
+
+  <div class="info">
+    <div class="info-title">📚 C'est quoi CORS ?</div>
+    <p>Par sécurité, les navigateurs bloquent les requêtes vers un domaine différent de celui de la page. Le dashboard recruteur est sur <em>localhost:80</em> (PHP) mais veut appeler <em>localhost:8000</em> (Python). Le middleware CORS dit au navigateur "c'est OK, cette API est autorisée".</p>
+  </div>
+
+  <hr class="divider">
+  <h2>🗄️ db.py — Le pool de connexions Python</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">db.py — Pool de connexions MySQL pour Python</span></div>
+<pre><span class="kw">import</span> pymysql
+<span class="kw">from</span> dbutils.pooled_db <span class="kw">import</span> PooledDB
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+
+<span class="fn">load_dotenv</span>()  <span class="cmt"># Lit le fichier .env pour les variables d'environnement</span>
+
+_pool = <span class="fn">PooledDB</span>(
+    creator=pymysql,     <span class="cmt"># Bibliothèque MySQL Python</span>
+    maxconnections=<span class="num">10</span>,   <span class="cmt"># Max 10 connexions simultanées</span>
+    mincached=<span class="num">2</span>,         <span class="cmt"># 2 connexions maintenues en permanence (prêtes)</span>
+    host=os.<span class="fn">getenv</span>(<span class="str">"DB_HOST"</span>, <span class="str">"localhost"</span>),  <span class="cmt"># Lit DB_HOST du .env, "localhost" par défaut</span>
+    database=os.<span class="fn">getenv</span>(<span class="str">"DB_NAME"</span>, <span class="str">"cvmatch_ia"</span>),
+    cursorclass=pymysql.cursors.DictCursor,  <span class="cmt"># Résultats en dictionnaire (comme PHP FETCH_ASSOC)</span>
+)
+
+<span class="kw">def</span> <span class="fn">get_conn</span>():
+    <span class="str">"""Retourne une connexion depuis le pool. Toujours appeler conn.close() après."""</span>
+    <span class="kw">return</span> _pool.<span class="fn">connection</span>()  <span class="cmt"># Prend une connexion disponible dans le pool</span></pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Pool de connexions — pourquoi ?</div>
+    <p>Créer une connexion MySQL prend du temps (~50ms). Avec une API qui reçoit 100 requêtes simultanées, créer 100 connexions serait très lent. Un pool <strong>maintient des connexions ouvertes</strong> et les prête à chaque requête. C'est comme un parking avec 10 voitures : tu prends une voiture, tu la rends, quelqu'un d'autre la prend.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>📁 routes/candidats.py — Indexation des CV</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Route POST /candidats/upload/{candidat_id}</span></div>
+<pre><span class="kw">@router</span>.post(<span class="str">"/upload/{candidat_id}"</span>)
+<span class="kw">def</span> <span class="fn">indexer_cv</span>(candidat_id: int, x_api_key: str = Header(default=<span class="str">""</span>)):
+    <span class="kw">if</span> x_api_key != CLE_API:
+        <span class="kw">raise</span> <span class="fn">HTTPException</span>(<span class="num">401</span>, <span class="str">"Non autorisé"</span>)  <span class="cmt"># Vérifie la clé secrète</span>
+
+    conn = <span class="fn">get_conn</span>()
+    <span class="kw">try</span>:
+        <span class="kw">with</span> conn.<span class="fn">cursor</span>() <span class="kw">as</span> cur:
+            <span class="cmt"># 1. Trouve le fichier CV le plus récent pour ce candidat</span>
+            cur.<span class="fn">execute</span>(<span class="str">"SELECT id, nom_fichier FROM cv_files WHERE candidat_id=%s ORDER BY id DESC LIMIT 1"</span>,
+                        (candidat_id,))
+            ligne = cur.<span class="fn">fetchone</span>()
+
+            <span class="cmt"># 2. Lit le texte du CV (PDF/DOCX/image)</span>
+            texte = <span class="fn">lire_cv</span>(chemin)   <span class="cmt"># services/cv.py</span>
+
+            <span class="cmt"># 3. IA extrait les compétences</span>
+            comps = <span class="fn">extraire_competences_cv</span>(texte)  <span class="cmt"># → Groq API</span>
+            comps_json = json.<span class="fn">dumps</span>(comps)          <span class="cmt"># Liste → chaîne JSON</span>
+
+            <span class="cmt"># 4. Crée le vecteur d'embedding</span>
+            emb = <span class="fn">vers_json</span>(<span class="fn">encoder</span>(texte))  <span class="cmt"># → Sentence-Transformers</span>
+
+            <span class="cmt"># 5. Stocke tout en base de données</span>
+            cur.<span class="fn">execute</span>(<span class="str">"UPDATE cv_files SET texte_brut=%s, embedding_json=%s, competences=%s ..."</span>,
+                        (texte, emb, comps_json, ligne[<span class="str">"id"</span>]))
+            conn.<span class="fn">commit</span>()
+
+        <span class="kw">return</span> {<span class="str">"statut"</span>: <span class="str">"ok"</span>}  <span class="cmt"># FastAPI convertit automatiquement en JSON</span>
+    <span class="kw">finally</span>:
+        conn.<span class="fn">close</span>()  <span class="cmt"># TOUJOURS remettre la connexion dans le pool</span></pre>
+  </div>
+
+  <div class="info">
+    <div class="info-title">📚 try/finally — Pourquoi ?</div>
+    <p>Si une exception (erreur) se produit dans le bloc <span class="hl">try</span>, le bloc <span class="hl">finally</span> s'exécute <strong>quand même</strong>. Ainsi <span class="hl">conn.close()</span> est toujours appelé, même en cas d'erreur. Sans ça, les connexions pourraient rester ouvertes indéfiniment et épuiser le pool.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : INTELLIGENCE ARTIFICIELLE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-ia" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Python / IA</div>
+    <div class="sec-title">services/ia.py — Les fonctions d'Intelligence Artificielle</div>
+    <p class="sec-desc">Ce fichier contient tout ce qui concerne l'IA de l'application : la connexion à Groq, l'extraction de compétences, la validation de métiers, et la génération de résumés.</p>
+  </div>
+
+  <h2>🤖 Groq — C'est quoi ?</h2>
+  <p>Groq est un service cloud qui fournit un accès ultra-rapide aux modèles de langage comme <strong>Llama 3 de Meta</strong>. C'est comme OpenAI avec ChatGPT, mais gratuit pour des volumes raisonnables et beaucoup plus rapide.</p>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">ia.py — Initialisation du client Groq</span></div>
+<pre><span class="kw">from</span> groq <span class="kw">import</span> Groq, DefaultHttpxClient
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+
+_client = <span class="fn">Groq</span>(
+    api_key=os.<span class="fn">getenv</span>(<span class="str">"GROQ_API_KEY"</span>),           <span class="cmt"># Clé API stockée dans .env (jamais dans le code!)</span>
+    http_client=<span class="fn">DefaultHttpxClient</span>(trust_env=<span class="kw">False</span>), <span class="cmt"># Ignore les proxies systèmes</span>
+)
+MODELE = <span class="str">"llama-3.1-8b-instant"</span>  <span class="cmt"># Modèle rapide pour extraction et résumés</span></pre>
+  </div>
+
+  <hr class="divider">
+  <h2>🔍 <span class="hl">valider_requete_metier()</span> — Validation IA</h2>
+
+  <p>Avant de chercher, on demande à l'IA de valider que le métier recherché est réel. "Chef de cuisine" → valide. "Ninja du marketing" → invalide.</p>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Validation du métier via Groq Llama 3</span></div>
+<pre><span class="kw">def</span> <span class="fn">valider_requete_metier</span>(requete: str) -> dict:
+    <span class="cmt"># Prompt soigneusement rédigé pour obtenir un JSON structuré</span>
+    prompt = <span class="str">f"""Tu es expert RH. Réponds UNIQUEMENT en JSON valide.
+Requête : {requete}
+
+Format attendu :
+{{
+  "est_valide": true/false,
+  "titre_normalise": "Intitulé corrigé",
+  "competences_attendues": ["comp1", "comp2"],
+  "formations": ["Formation 1"]
+}}"""</span>
+
+    r = _client.chat.completions.<span class="fn">create</span>(
+        model=MODELE,
+        max_tokens=<span class="num">700</span>,       <span class="cmt"># Maximum 700 tokens en réponse</span>
+        temperature=<span class="num">0.1</span>,      <span class="cmt"># 0.0=déterministe, 1.0=créatif. 0.1 = très précis</span>
+        messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: prompt}]
+    )
+    <span class="kw">return</span> <span class="fn">_extraire_json</span>(r.choices[<span class="num">0</span>].message.content)  <span class="cmt"># Parse le JSON de la réponse</span></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">_extraire_json() — Nettoyage de la réponse IA</span></div>
+<pre><span class="kw">def</span> <span class="fn">_extraire_json</span>(contenu: str) -> dict:
+    <span class="cmt"># L'IA peut envelopper le JSON dans des blocs ```json...``` — on enlève ça</span>
+    contenu = re.<span class="fn">sub</span>(<span class="str">r'```(?:json)?\s*'</span>, <span class="str">''</span>, contenu.<span class="fn">strip</span>())
+    contenu = re.<span class="fn">sub</span>(<span class="str">r'```\s*'</span>, <span class="str">''</span>, contenu)
+
+    <span class="cmt"># Trouve le premier {…} dans la réponse (regex)</span>
+    m = re.<span class="fn">search</span>(<span class="str">r'\{.*\}'</span>, contenu, re.DOTALL)  <span class="cmt"># DOTALL = le . matche aussi les retours à la ligne</span>
+    <span class="kw">if</span> m:
+        <span class="kw">try</span>: <span class="kw">return</span> json.<span class="fn">loads</span>(m.<span class="fn">group</span>())  <span class="cmt"># Convertit JSON → dictionnaire Python</span>
+        <span class="kw">except</span>: <span class="kw">return</span> {}
+    <span class="kw">return</span> {}  <span class="cmt"># Retourne dictionnaire vide si pas de JSON trouvé</span></pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Temperature en IA — c'est quoi ?</div>
+    <p>La "temperature" contrôle l'aléatoire des réponses du LLM. À <strong>0.1</strong> (très bas), l'IA donne toujours la même réponse la plus probable — parfait pour les JSON structurés. À <strong>0.8</strong> (élevé), l'IA est plus créative et variée — mieux pour la rédaction. Le chat utilise 0.3, l'extraction utilise 0.1.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>📝 <span class="hl">extraire_competences_cv()</span></h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Extraction IA des compétences d'un CV</span></div>
+<pre><span class="kw">def</span> <span class="fn">extraire_competences_cv</span>(texte_brut: str) -> list:
+    <span class="str">"""Extrait les compétences techniques depuis le texte d'un CV (max 15)."""</span>
+    prompt = <span class="str">f"""Tu es expert RH. Lis ce CV et retourne UNIQUEMENT ce JSON :
+{{"competences":["comp1","comp2"]}}
+Règles : max 15 compétences TECHNIQUES. Pas de soft skills. JSON uniquement.
+
+CV :
+\"\"\"{texte_brut[:4000]}\"\"\"
+"""</span>
+    <span class="cmt"># On envoie max 4000 caractères du CV pour rester dans les limites de tokens</span>
+
+    r = _client.chat.completions.<span class="fn">create</span>(
+        model=MODELE, max_tokens=<span class="num">300</span>, temperature=<span class="num">0.1</span>,
+        messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>:prompt}]
+    )
+    d = <span class="fn">_extraire_json</span>(r.choices[<span class="num">0</span>].message.content or <span class="str">""</span>)
+    <span class="kw">return</span> d.<span class="fn">get</span>(<span class="str">"competences"</span>, []) or []  <span class="cmt"># Retourne [] si pas de compétences trouvées</span></pre>
+  </div>
+
+  <hr class="divider">
+  <h2>💬 routes/conversation.py — L'agent conversationnel</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Route POST /conversation/chat</span></div>
+<pre>MODELE_CHAT = <span class="str">"llama-3.3-70b-versatile"</span>  <span class="cmt"># Modèle plus puissant pour le chat</span>
+
+<span class="kw">@router</span>.post(<span class="str">"/chat"</span>)
+<span class="kw">def</span> <span class="fn">chat</span>(req: ChatRequest, x_api_key: str = Header(default=<span class="str">""</span>)):
+    <span class="cmt"># 1. Enrichir les profils avec le texte brut de leur CV (pour contexte)</span>
+    profils_enrichis = <span class="fn">_charger_textes_cv</span>(list(req.derniers_profils))
+
+    <span class="cmt"># 2. Construire le contexte — résumé des profils pour le prompt</span>
+    cv_context = <span class="str">""</span>
+    <span class="kw">for</span> i, p <span class="kw">in</span> <span class="fn">enumerate</span>(profils_enrichis, <span class="num">1</span>):
+        cv_context += <span class="str">f"\n--- Candidat #{i} : {p['nom']} (Score: {p['score']}%) ---\n"</span>
+        cv_context += <span class="str">f"Ville: {p.get('ville')} | Expérience: {p.get('annees_exp')} an(s)\n"</span>
+        <span class="kw">if</span> p.<span class="fn">get</span>(<span class="str">"cv_texte_brut"</span>):
+            cv_context += <span class="str">f"Texte CV:\n{p['cv_texte_brut'][:3000]}\n"</span>  <span class="cmt"># Max 3000 chars</span>
+
+    <span class="cmt"># 3. Construire le prompt système (instructions de l'IA)</span>
+    systeme = <span class="str">f"""Tu es un Expert Analyste CV Senior pour CVMatch IA.
+Tu as accès UNIQUEMENT aux CVs suivants :
+{cv_context}
+RÈGLES : Réponds en français. Utilise des tableaux Markdown si utile.
+Si la question ne concerne pas les CVs : réponds "Je suis spécialisé dans l'analyse de CVs."
+"""</span>
+
+    <span class="cmt"># 4. Messages = système + historique + nouveau message</span>
+    messages = (
+        [{<span class="str">"role"</span>:<span class="str">"system"</span>, <span class="str">"content"</span>:systeme}]  <span class="cmt"># Instructions de comportement</span>
+        + req.historique                           <span class="cmt"># Historique de la conversation</span>
+        + [{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>:req.message}] <span class="cmt"># Nouveau message</span>
+    )
+
+    <span class="cmt"># 5. Appel au LLM</span>
+    reponse = _client.chat.completions.<span class="fn">create</span>(
+        model=MODELE_CHAT, max_tokens=<span class="num">2048</span>, temperature=<span class="num">0.3</span>, messages=messages
+    )
+    contenu = reponse.choices[<span class="num">0</span>].message.content.<span class="fn">strip</span>()
+
+    <span class="kw">return</span> {<span class="str">"reponse"</span>: contenu, <span class="str">"profils"</span>: req.derniers_profils}</pre>
+  </div>
+
+  <div class="info">
+    <div class="info-title">📚 Le rôle "system" dans les LLMs</div>
+    <p>Les LLMs acceptent 3 types de messages : <span class="hl">system</span> (instructions secrètes au modèle), <span class="hl">user</span> (messages de l'utilisateur) et <span class="hl">assistant</span> (réponses précédentes du modèle). Le message <span class="hl">system</span> est la façon de "programmer" le comportement du LLM — lui donner une personnalité, des règles, du contexte.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : ALGORITHME DE MATCHING -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-matching" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Python / Machine Learning</div>
+    <div class="sec-title">services/matching.py — L'algorithme de scoring</div>
+    <p class="sec-desc">C'est le cœur intellectuel du projet. L'algorithme calcule un score de compatibilité entre une requête texte et chaque CV en combinant 4 critères pondérés.</p>
+  </div>
+
+  <h2>🎯 Le scoring hybride multicritères</h2>
+  <p>Le score final est une combinaison pondérée de 4 sous-scores :</p>
+
+  <div class="score-row"><div class="score-label">🧠 Sémantique</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:40%;background:linear-gradient(90deg,#63d2be,#3b82f6)"></div></div><div class="score-pct" style="color:#63d2be">40%</div></div>
+  <div class="score-row"><div class="score-label">⚡ Compétences</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:30%;background:linear-gradient(90deg,#f0b429,#fb923c)"></div></div><div class="score-pct" style="color:#f0b429">30%</div></div>
+  <div class="score-row"><div class="score-label">📅 Expérience</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:20%;background:linear-gradient(90deg,#a78bfa,#ec4899)"></div></div><div class="score-pct" style="color:#a78bfa">20%</div></div>
+  <div class="score-row"><div class="score-label">📍 Localisation</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:10%;background:linear-gradient(90deg,#4ade80,#10b981)"></div></div><div class="score-pct" style="color:#4ade80">10%</div></div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Formule du score final</div>
+    <p><span class="hl">score = (sémantique × 0.40) + (compétences × 0.30) + (expérience × 0.20) + (localisation × 0.10)</span> — Le résultat est multiplié par 100 pour obtenir un pourcentage de 0 à 100%.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>🧠 Les Embeddings — Le score sémantique</h2>
+
+  <p>Un "embedding" transforme un texte en une liste de nombres (vecteur). Des textes similaires produisent des vecteurs proches dans l'espace mathématique.</p>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">matching.py — Initialisation du modèle d'embeddings</span></div>
+<pre><span class="kw">from</span> sentence_transformers <span class="kw">import</span> SentenceTransformer
+
+_model = <span class="fn">SentenceTransformer</span>(<span class="str">"paraphrase-multilingual-MiniLM-L12-v2"</span>)
+<span class="cmt"># Ce modèle :
+# - Est multilingue (français, anglais, etc.)
+# - Encode n'importe quel texte en 384 nombres (vecteur)
+# - Des textes similaires → vecteurs proches → cosinus élevé</span>
+
+<span class="kw">def</span> <span class="fn">encoder</span>(texte: str) -> list[float]:
+    <span class="kw">return</span> _model.<span class="fn">encode</span>(texte, normalize_embeddings=<span class="kw">True</span>).<span class="fn">tolist</span>()
+    <span class="cmt"># normalize=True → le vecteur a une longueur de 1 (simplifie le calcul cosinus)</span></pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Similarité cosinus — Comment comparer deux vecteurs</span></div>
+<pre><span class="kw">def</span> <span class="fn">cosinus</span>(a: np.ndarray, b: np.ndarray) -> float:
+    d = float(np.linalg.<span class="fn">norm</span>(a) * np.linalg.<span class="fn">norm</span>(b))  <span class="cmt"># Longueur de chaque vecteur</span>
+    <span class="kw">return</span> <span class="num">0.0</span> <span class="kw">if</span> d == <span class="num">0</span> <span class="kw">else</span> float(np.<span class="fn">dot</span>(a, b) / d)
+    <span class="cmt"># np.dot = produit scalaire des deux vecteurs
+    # Résultat entre -1 et 1. Plus proche de 1 = plus similaire.
+    # Textes identiques → cosinus = 1.0 (100% similaire)
+    # Textes sans rapport → cosinus ≈ 0.0</span></pre>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-icon" style="background:rgba(99,210,190,.15)">🎓</div><div class="card-title">Exemple concret d'embedding</div></div>
+    <p>"Chef de cuisine" → [0.12, -0.45, 0.78, ...] (384 nombres)</p>
+    <p>"Cuisinier professionnel" → [0.11, -0.44, 0.79, ...] (très similaire !)</p>
+    <p>"Développeur PHP" → [-0.32, 0.19, -0.12, ...] (très différent)</p>
+    <p style="margin-top:8px">Le cosinus entre "Chef de cuisine" et "Cuisinier" sera ≈0.95. Entre "Chef de cuisine" et "Développeur PHP" sera ≈0.05. C'est ainsi que l'IA comprend le sens des mots.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>⚡ <span class="hl">_score_competences()</span></h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Scoring par correspondance de compétences</span></div>
+<pre>_ALIAS = {<span class="str">"js"</span>:<span class="str">"javascript"</span>, <span class="str">"py"</span>:<span class="str">"python"</span>, <span class="str">"node"</span>:<span class="str">"nodejs"</span>}
+<span class="cmt"># Dictionnaire de synonymes : "js" est traité comme "javascript"</span>
+
+<span class="kw">def</span> <span class="fn">_match_comp</span>(c1: str, c2: str) -> bool:
+    a, b = c1.lower().<span class="fn">strip</span>(), c2.lower().<span class="fn">strip</span>()
+    <span class="kw">if</span> a == b <span class="kw">or</span> a <span class="kw">in</span> b <span class="kw">or</span> b <span class="kw">in</span> a: <span class="kw">return</span> <span class="kw">True</span>  <span class="cmt"># "react" in "reactjs" → True</span>
+    <span class="kw">return</span> _ALIAS.<span class="fn">get</span>(a, a) == _ALIAS.<span class="fn">get</span>(b, b)    <span class="cmt"># "js" → "javascript" == "javascript"</span>
+
+<span class="kw">def</span> <span class="fn">_score_competences</span>(requete: str, competences: list, texte: str) -> float:
+    mots = [m <span class="kw">for</span> m <span class="kw">in</span> re.<span class="fn">findall</span>(<span class="str">r"\w+"</span>, requete.lower()) <span class="kw">if</span> <span class="fn">len</span>(m) > <span class="num">2</span>]
+    <span class="cmt"># Extrait tous les mots de plus de 2 caractères de la requête</span>
+    <span class="kw">if</span> <span class="kw">not</span> mots: <span class="kw">return</span> <span class="num">0.5</span>  <span class="cmt"># Si requête vide → score neutre</span>
+
+    txt = (texte or <span class="str">""</span>).lower()
+    trouves = <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> m <span class="kw">in</span> mots <span class="kw">if</span>
+                  <span class="fn">any</span>(<span class="fn">_match_comp</span>(m, c) <span class="kw">for</span> c <span class="kw">in</span> competences)  <span class="cmt"># Dans les compétences IA</span>
+                  <span class="kw">or</span> m <span class="kw">in</span> txt)                                    <span class="cmt"># Ou dans le texte brut du CV</span>
+    <span class="kw">return</span> trouves / <span class="fn">len</span>(mots)  <span class="cmt"># Ratio : 5 mots trouvés / 10 mots cherchés = 0.5 (50%)</span></pre>
+  </div>
+
+  <hr class="divider">
+  <h2>📅 <span class="hl">_score_experience()</span></h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Scoring d'expérience</span></div>
+<pre><span class="kw">def</span> <span class="fn">_score_experience</span>(requete: str, annees_cv: float) -> float:
+    q = requete.lower()
+    nums = re.<span class="fn">findall</span>(<span class="str">r"(\d+\.?\d*)\s*(?:ans?|an)"</span>, q)  <span class="cmt"># Cherche "3 ans" ou "5 an" dans la requête</span>
+
+    <span class="kw">if</span> nums:
+        demandees = float(nums[<span class="num">0</span>])   <span class="cmt"># "3 ans exp." → demandees = 3.0</span>
+    <span class="kw">elif</span> <span class="fn">any</span>(m <span class="kw">in</span> q <span class="kw">for</span> m <span class="kw">in</span> MOTS_SENIOR):  <span class="cmt"># "senior" → suppose 5 ans</span>
+        demandees = <span class="num">5.0</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="num">0.7</span>  <span class="cmt"># Pas d'info sur l'expérience → score neutre</span>
+
+    ratio = annees_cv / demandees
+    <span class="kw">if</span> ratio >= <span class="num">1.0</span>:
+        <span class="kw">return</span> min(<span class="num">1.0</span>, <span class="num">0.70</span> + (ratio - <span class="num">1.0</span>) * <span class="num">0.15</span>)
+        <span class="cmt"># A plus que demandé → bonus progressif, max 1.0 (100%)</span>
+    <span class="kw">return</span> round(ratio * <span class="num">0.70</span>, <span class="num">3</span>)
+    <span class="cmt"># A moins que demandé → score proportionnel. 1 an pour 3 demandés = 0.33 × 0.7 = 23%</span></pre>
+  </div>
+
+  <hr class="divider">
+  <h2>📍 <span class="hl">_score_localisation()</span></h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Scoring de localisation — Adapté à l'Afrique de l'Ouest</span></div>
+<pre>VILLES_AOF = [<span class="str">"abidjan"</span>, <span class="str">"bouaké"</span>, <span class="str">"dakar"</span>, <span class="str">"bamako"</span>, <span class="str">"lomé"</span>, ...]
+<span class="cmt"># Liste des villes principales d'Afrique de l'Ouest</span>
+
+<span class="kw">def</span> <span class="fn">_score_localisation</span>(requete: str, ville: str) -> float:
+    <span class="kw">if</span> <span class="kw">not</span> ville: <span class="kw">return</span> <span class="num">0.3</span>      <span class="cmt"># Pas de ville → pénalité légère</span>
+    q, v = requete.lower(), ville.lower().<span class="fn">strip</span>()
+    <span class="kw">if</span> v <span class="kw">in</span> q <span class="kw">or</span> q <span class="kw">in</span> v: <span class="kw">return</span> <span class="num">1.0</span>  <span class="cmt"># Ville exacte dans la requête → 100%</span>
+    <span class="kw">if</span> <span class="fn">any</span>(c <span class="kw">in</span> q <span class="kw">for</span> c <span class="kw">in</span> VILLES_AOF) <span class="kw">and</span> v <span class="kw">in</span> VILLES_AOF:
+        <span class="kw">return</span> <span class="num">0.6</span>  <span class="cmt"># Requête veut une ville AOF, candidat est en AOF → bonus partiel</span>
+    <span class="kw">if</span> <span class="kw">not</span> <span class="fn">any</span>(c <span class="kw">in</span> q <span class="kw">for</span> c <span class="kw">in</span> VILLES_AOF + [<span class="str">"paris"</span>, <span class="str">"lyon"</span>]):
+        <span class="kw">return</span> <span class="num">0.7</span>  <span class="cmt"># Pas de ville spécifiée dans la requête → score neutre</span>
+    <span class="kw">return</span> <span class="num">0.2</span>      <span class="cmt"># Villes incompatibles → pénalité forte</span></pre>
+  </div>
+
+  <hr class="divider">
+  <h2>🏆 <span class="hl">classer_candidats()</span> — L'algorithme principal</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">Python</span><span class="code-title">Classement final des candidats</span></div>
+<pre><span class="kw">def</span> <span class="fn">classer_candidats</span>(requete: str, candidats: list[dict]) -> list[dict]:
+    <span class="kw">if</span> <span class="kw">not</span> candidats: <span class="kw">return</span> []
+
+    <span class="cmt"># Encoder la requête une seule fois (optimisation)</span>
+    vreq = np.<span class="fn">array</span>(<span class="fn">encoder</span>(requete), dtype=np.float32)
+
+    resultats = []
+    <span class="kw">for</span> c <span class="kw">in</span> candidats:
+        texte = c.<span class="fn">get</span>(<span class="str">"raw_text"</span>, <span class="str">""</span>) or <span class="str">""</span>
+        annees = <span class="fn">_parse_annees</span>(c.<span class="fn">get</span>(<span class="str">"annees_exp"</span>, <span class="num">0</span>))
+        ville = c.<span class="fn">get</span>(<span class="str">"ville"</span>, <span class="str">""</span>) or c.<span class="fn">get</span>(<span class="str">"ville_cv"</span>, <span class="str">""</span>) or <span class="str">""</span>
+
+        <span class="cmt"># Score sémantique : compare le vecteur de la requête avec celui du CV</span>
+        vc = <span class="fn">depuis_json</span>(c.<span class="fn">get</span>(<span class="str">"embedding_json"</span>))  <span class="cmt"># JSON → tableau numpy</span>
+        <span class="kw">if</span> vc <span class="kw">is not None</span> <span class="kw">and</span> vc.shape == vreq.shape:
+            s_sem = <span class="fn">max</span>(<span class="num">0.0</span>, <span class="fn">cosinus</span>(vreq, vc))  <span class="cmt"># Entre 0 et 1</span>
+        <span class="kw">else</span>:
+            s_sem = <span class="num">0.0</span>  <span class="cmt"># Pas d'embedding → score sémantique nul</span>
+
+        s_comp = <span class="fn">_score_competences</span>(requete, c.<span class="fn">get</span>(<span class="str">"competences"</span>, []), texte)
+        s_exp  = <span class="fn">_score_experience</span>(requete, annees)
+        s_loc  = <span class="fn">_score_localisation</span>(requete, ville)
+
+        <span class="cmt"># Score final pondéré</span>
+        score = (s_sem*<span class="num">0.40</span> + s_comp*<span class="num">0.30</span> + s_exp*<span class="num">0.20</span> + s_loc*<span class="num">0.10</span>) * <span class="num">100</span>
+
+        <span class="kw">if</span> score >= <span class="num">15</span>:  <span class="cmt"># Seuil minimum : on n'affiche pas les scores < 15%</span>
+            resultats.<span class="fn">append</span>({
+                **c,           <span class="cmt"># Décompresse tout le dictionnaire candidat (** = spread)</span>
+                <span class="str">"score"</span>: round(score, <span class="num">1</span>),
+                <span class="str">"_score_detail"</span>: {   <span class="cmt"># Détail pour l'affichage</span>
+                    <span class="str">"semantique"</span>:   round(s_sem*<span class="num">100</span>, <span class="num">1</span>),
+                    <span class="str">"competences"</span>:  round(s_comp*<span class="num">100</span>, <span class="num">1</span>),
+                    <span class="str">"experience"</span>:   round(s_exp*<span class="num">100</span>, <span class="num">1</span>),
+                    <span class="str">"localisation"</span>: round(s_loc*<span class="num">100</span>, <span class="num">1</span>),
+                }
+            })
+
+    resultats.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: x[<span class="str">"score"</span>], reverse=<span class="kw">True</span>)  <span class="cmt"># Tri décroissant</span>
+    <span class="kw">return</span> resultats[:<span class="num">5</span>]  <span class="cmt"># Retourne seulement les 5 meilleurs</span></pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 L'opérateur ** en Python (spread)</div>
+    <p><span class="hl">{**c, "score": 87}</span> crée un <strong>nouveau dictionnaire</strong> qui contient toutes les paires clé:valeur de <span class="hl">c</span>, plus la clé "score" avec la valeur 87. C'est l'équivalent de copier le dictionnaire et y ajouter des champs. En JavaScript, l'équivalent est <span class="hl">{...c, score: 87}</span>.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : CSS / DESIGN -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-css" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">CSS</div>
+    <div class="sec-title">style.css — Le système de design</div>
+    <p class="sec-desc">Le fichier CSS définit l'apparence de toute l'application. Il utilise un "design system" basé sur des variables CSS, permettant de changer le thème entier en modifiant quelques lignes.</p>
+  </div>
+
+  <h2>🎨 Les variables CSS — Le coeur du design system</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">CSS</span><span class="code-title">Variables CSS — Couleurs et dimensions</span></div>
+<pre><span class="fn">:root</span> {
+  <span class="cmt">/* Couleurs de texte */</span>
+  --ink: #082026;          <span class="cmt">/* Texte très foncé (quasi-noir) */</span>
+  --muted: #101a1b;        <span class="cmt">/* Texte secondaire */</span>
+
+  <span class="cmt">/* Couleur primaire (bleu/vert) */</span>
+  --primary: #134D80;
+  --primary-light: #97DDE8;
+  --primary-bg: rgba(219,238,255,0.6);  <span class="cmt">/* Fond très léger pour zones primaires */</span>
+
+  <span class="cmt">/* Gradients */</span>
+  --gradient-1: linear-gradient(135deg, #FFD1E2 0%, #97DDE8 100%);  <span class="cmt">/* Rose → Bleu clair (fond) */</span>
+  --gradient-4: linear-gradient(135deg, #004A4A 0%, #082026 100%);  <span class="cmt">/* Vert foncé → Noir (sidebar, navbar) */</span>
+
+  <span class="cmt">/* Rayons de bordure */</span>
+  --r-sm: 6px;    <span class="cmt">/* Petits éléments */</span>
+  --r-md: 10px;   <span class="cmt">/* Moyen (formulaires, boutons) */</span>
+  --r-lg: 14px;   <span class="cmt">/* Cards */</span>
+  --r-full: 9999px; <span class="cmt">/* Cercle complet (badges, pills) */</span>
+
+  <span class="cmt">/* Dimensions du layout */</span>
+  --sidebar-w: 220px;  <span class="cmt">/* Largeur de la sidebar */</span>
+  --topbar-h: 52px;    <span class="cmt">/* Hauteur de la barre du haut */</span>
+}</pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 Pourquoi utiliser des variables CSS ?</div>
+    <p>Sans variables : si on veut changer la couleur primaire, on doit modifier des dizaines d'endroits. Avec des variables : on change <span class="hl">--primary: #134D80;</span> en <span class="hl">--primary: #e91e63;</span> et <strong>toute l'application change de couleur</strong>. C'est la base d'un design system professionnel.</p>
+  </div>
+
+  <hr class="divider">
+  <h2>📐 Le layout principal</h2>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">CSS</span><span class="code-title">Structure sidebar + main — Flexbox</span></div>
+<pre><span class="cmt">/* body en flex = sidebar et main côte à côte */</span>
+body { display: flex; }   <span class="cmt">/* Les enfants directs s'alignent horizontalement */</span>
+
+.sidebar {
+    width: var(--sidebar-w);   <span class="cmt">/* Largeur fixe définie par la variable */</span>
+    flex-shrink: 0;            <span class="cmt">/* Ne se rétrécit pas même si espace manque */</span>
+    position: sticky;          <span class="cmt">/* Reste visible même en scrollant */</span>
+    top: 0; height: 100vh;     <span class="cmt">/* Prend toute la hauteur de l'écran */</span>
+    background: var(--gradient-4); <span class="cmt">/* Vert foncé → noir */</span>
+}
+
+.main {
+    flex: 1;    <span class="cmt">/* Prend tout l'espace restant */</span>
+    display: flex; flex-direction: column;  <span class="cmt">/* Empile topbar + content */</span>
+    min-width: 0;  <span class="cmt">/* Trick important : empêche le débordement */</span>
+}</pre>
+  </div>
+
+  <h3>Les boutons — système de variantes</h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">CSS</span><span class="code-title">Système de boutons avec modificateurs</span></div>
+<pre><span class="cmt">/* Classe de base — propriétés communes à TOUS les boutons */</span>
+.btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 20px; border-radius: var(--r-full);
+    font-size: 13px; font-weight: 600;
+    transition: all .2s cubic-bezier(.34,1.56,.64,1); <span class="cmt">/* Animation ressort */</span>
+}
+.btn:hover { transform: translateY(-1px); }  <span class="cmt">/* Lève légèrement au survol */</span>
+
+<span class="cmt">/* Modificateurs — s'ajoutent à .btn */</span>
+.btn-primary { background: var(--gradient-4); color: #fff; }  <span class="cmt">/* Bouton foncé */</span>
+.btn-gold    { background: var(--gradient-2); color: #fff; }  <span class="cmt">/* Bouton teal/bleu */</span>
+.btn-ghost   { background: transparent; border: 1px solid var(--border-md); } <span class="cmt">/* Bouton outline */</span>
+
+<span class="cmt">/* Tailles */</span>
+.btn-lg { padding: 14px 28px; font-size: 15px; }  <span class="cmt">/* Grand */</span>
+.btn-sm { padding: 6px 14px; font-size: 12px; }   <span class="cmt">/* Petit */</span>
+.btn-xs { padding: 4px 10px; font-size: 11px; }   <span class="cmt">/* Très petit */</span></pre>
+  </div>
+
+  <div class="explain">
+    <div class="explain-title">💡 BEM — Méthodologie CSS</div>
+    <p>Le code CSS suit une convention : <span class="hl">.card</span> (bloc), <span class="hl">.card-hover</span> (modificateur), <span class="hl">.c-avatar</span> (élément enfant). Cela évite les conflits de noms et rend le code prévisible. <span class="hl">btn</span> = le bouton, <span class="hl">btn-gold</span> = variante or, <span class="hl">btn-lg</span> = grande taille.</p>
+  </div>
+
+  <h3>Le responsive design — mobile first</h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">CSS</span><span class="code-title">Media queries — Adaptation mobile</span></div>
+<pre><span class="cmt">/* Tablette (≤ 768px) */</span>
+<span class="kw">@media</span>(max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }  <span class="cmt">/* 1 colonne au lieu de 2-4 */</span>
+    .sidebar { width: 60px; }     <span class="cmt">/* Sidebar réduite : icônes seulement */</span>
+    .sb-item span { display: none; } <span class="cmt">/* Cache les textes des menus */</span>
+    .search-box { flex-direction: column; } <span class="cmt">/* Champ de recherche en colonne */</span>
+}
+
+<span class="cmt">/* Mobile (≤ 480px) */</span>
+<span class="kw">@media</span>(max-width: 480px) {
+    .sidebar { display: none; }   <span class="cmt">/* Sidebar totalement cachée */</span>
+    .main { width: 100%; }        <span class="cmt">/* Main occupe tout l'écran */</span>
+    body { flex-direction: column; } <span class="cmt">/* Layout vertical */</span>
+    h1 { font-size: 28px; letter-spacing: -1px; }  <span class="cmt">/* Titre plus petit */</span>
+}</pre>
+  </div>
+
+  <h3>Les animations CSS</h3>
+
+  <div class="code-block">
+    <div class="code-bar"><span class="code-lang">CSS</span><span class="code-title">Animations définies et utilisées</span></div>
+<pre><span class="cmt">/* Définition de l'animation fadeInUp */</span>
+<span class="kw">@keyframes</span> fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }  <span class="cmt">/* Commence invisible, décalé de 14px */</span>
+    to   { opacity: 1; transform: translateY(0); }      <span class="cmt">/* Arrive visible, position normale */</span>
+}
+
+<span class="cmt">/* Pulsation du point vert (indicateur actif) */</span>
+<span class="kw">@keyframes</span> pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: .5; transform: scale(1.3); }  <span class="cmt">/* Grossit et s'estompe à 50% */</span>
+}
+
+<span class="cmt">/* Utilisation : chaque carte candidat entre avec l'animation */</span>
+.candidate-card { animation: fadeInUp .3s ease both; }
+.candidate-card:nth-child(2) { animation-delay: .08s; } <span class="cmt">/* Décalage en cascade */</span>
+.candidate-card:nth-child(3) { animation-delay: .16s; }</pre>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : FLUX COMPLETS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-flux" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Architecture</div>
+    <div class="sec-title">Les flux complets — De bout en bout</div>
+    <p class="sec-desc">Maintenant que tu connais chaque fichier, voici comment ils s'enchaînent dans les scénarios réels d'utilisation.</p>
+  </div>
+
+  <h2>🔄 Flux 1 : Inscription et upload de CV (Candidat)</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Candidat remplit le formulaire d'inscription</div>
+        <div class="step-body"><span class="hl">login_candidat.php</span> reçoit les données POST. Valide email, longueur du mot de passe, correspondance des mots de passe. Hash le mot de passe avec BCrypt. Insère dans la table <span class="hl">candidats</span>. Crée la session. Redirige vers le dashboard.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Candidat dépose son CV sur le dashboard</div>
+        <div class="step-body"><span class="hl">dashboard_candidat.php</span> traite l'action POST <span class="hl">upload_cv</span>. Appelle <span class="hl">uploadCV()</span> depuis config.php : vérifie l'extension, la taille, renomme le fichier et le déplace dans /uploads/. Insère un enregistrement dans la table <span class="hl">cv_files</span> avec le nom du fichier.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">PHP appelle l'API Python pour indexer</div>
+        <div class="step-body"><span class="hl">callAPI('/candidats/upload/{id}')</span> utilise cURL pour appeler <span class="hl">routes/candidats.py</span>. Python trouve le fichier CV, lit son contenu avec <span class="hl">services/cv.py</span> (pdfplumber pour PDF, pytesseract pour images).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Python extrait les compétences via Groq IA</div>
+        <div class="step-body"><span class="hl">services/ia.py</span> envoie les 4000 premiers caractères du texte à Llama 3 via Groq. L'IA retourne un JSON avec les compétences techniques. Ex: ["PHP", "MySQL", "JavaScript", "Laravel"].</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Python génère l'embedding vectoriel</div>
+        <div class="step-body"><span class="hl">services/matching.py</span> encode le texte complet du CV avec Sentence-Transformers. Produit un vecteur de 384 nombres flottants. Ce vecteur est converti en JSON et stocké dans <span class="hl">cv_files.embedding_json</span>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Tout est stocké en base de données</div>
+        <div class="step-body">La table <span class="hl">cv_files</span> est mise à jour : <span class="hl">texte_brut</span> = texte du CV, <span class="hl">embedding_json</span> = vecteur, <span class="hl">competences</span> = JSON des compétences. Le candidat est maintenant "indexé" et apparaîtra dans les recherches.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>🔍 Flux 2 : Recherche IA (Recruteur)</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Recruteur tape sa requête dans le dashboard</div>
+        <div class="step-body"><span class="hl">dashboard_recruteur.php</span> — la fonction JavaScript <span class="hl">runSearch()</span> capture le texte. Le navigateur envoie directement une requête POST à <span class="hl">http://localhost:8000/recherche</span> avec le texte et la clé API.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Python valide le métier via IA</div>
+        <div class="step-body"><span class="hl">routes/recherche.py</span> appelle <span class="hl">valider_requete_metier()</span>. Groq Llama 3 vérifie si le métier existe, corrige les fautes ("developpeur" → "développeur"), liste les compétences attendues. Si invalide, retourne une erreur.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Sync des profils externes</div>
+        <div class="step-body"><span class="hl">services/cv.py → sync_profils_externes()</span> parcourt le dossier /uploads/ pour trouver des CV qui n'appartiennent à aucun compte (déposés manuellement). Les indexe en BDD si nouveaux ou modifiés.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Chargement de tous les CV depuis la BDD</div>
+        <div class="step-body">Deux requêtes SQL : une pour les <strong>candidats inscrits</strong> (avec leur dernier CV), une pour les <strong>profils externes</strong>. Résultats fusionnés en une seule liste. Les compétences JSON sont désérialisées en listes Python.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Algorithme de matching — scoring multicritères</div>
+        <div class="step-body"><span class="hl">services/matching.py → classer_candidats()</span>. Pour chaque candidat : calcul du cosinus entre la requête et le vecteur CV (sémantique), comptage des compétences communes, comparaison des années d'expérience, vérification de la ville. Score pondéré 40/30/20/10.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Génération des résumés IA</div>
+        <div class="step-body">Pour chacun des top 5 candidats, <span class="hl">generer_resume_candidat()</span> appelle Groq pour écrire 2-3 phrases expliquant pourquoi ce profil correspond ou non. Commence par "Profil pertinent", "Profil partiel" ou "Profil non adapté".</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <div class="step-title">Retour et affichage</div>
+        <div class="step-body">Le JSON des 5 profils avec leurs scores est retourné au navigateur. <span class="hl">renderResults()</span> génère dynamiquement les cartes HTML avec le rang, les scores détaillés, les compétences et le résumé IA. L'agent de chat est prêt.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>💬 Flux 3 : Conversation avec l'agent IA</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Recruteur envoie un message au chat</div>
+        <div class="step-body"><span class="hl">sendChat()</span> récupère le message. Ajoute à <span class="hl">chatHistory</span> (tableau JavaScript). Affiche une bulle "typing" animée pendant l'attente. Envoie POST à <span class="hl">/conversation/chat</span> avec le message, l'historique complet et les profils actuels.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Python enrichit le contexte</div>
+        <div class="step-body"><span class="hl">_charger_textes_cv()</span> charge le texte brut de chaque CV depuis la BDD (max 3000 caractères par CV). Construit un résumé structuré de chaque profil pour le prompt.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Construction du prompt complet</div>
+        <div class="step-body">Messages = [système avec contexte CV] + [historique] + [nouveau message]. Le tout est envoyé à Groq Llama 3.3-70B (modèle plus puissant que pour la recherche).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Réponse et sauvegarde</div>
+        <div class="step-body">La réponse de l'IA est nettoyée (suppression des blocs ```json``` parasites). Message utilisateur + réponse IA sauvegardés dans <span class="hl">conversation_history</span> en BDD. Retournés au navigateur pour affichage.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>✉️ Flux 4 : Contact candidat (messagerie)</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Recruteur clique "Contacter"</div>
+        <div class="step-body"><span class="hl">contactCandidat(userId, nomCandidat)</span> ouvre le modal HTML. Remplit le champ caché avec l'ID du candidat. Affiche son nom dans le sous-titre du modal.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Recruteur remplit et envoie le message</div>
+        <div class="step-body"><span class="hl">envoyerMessage()</span> lit le sujet et le corps. Envoie un POST (JSON) à <span class="hl">envoyer_message.php</span>. Ce fichier vérifie que l'utilisateur est bien un recruteur, que le destinataire existe, puis insère dans la table <span class="hl">messages</span>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Le candidat reçoit le message</div>
+        <div class="step-body">Sur son dashboard, le badge "Messages" affiche le nombre de messages non-lus. En cliquant sur "Messages", <span class="hl">loadMessages()</span> appelle <span class="hl">get_messages.php</span> qui retourne les messages en JSON. Affichage avec bordure colorée si non-lu.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION : GLOSSAIRE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sec-glossaire" class="section">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-label">Référence</div>
+    <div class="sec-title">Glossaire — Tous les termes expliqués</div>
+    <p class="sec-desc">Un dictionnaire complet de tous les concepts techniques utilisés dans ce projet.</p>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h2>🐘 PHP & Web</h2>
+      <table class="data-table">
+        <thead><tr><th>Terme</th><th>Explication</th></tr></thead>
+        <tbody>
+          <tr><td>PHP</td><td>Langage de programmation côté serveur. Le code s'exécute sur le serveur avant d'envoyer le HTML au navigateur.</td></tr>
+          <tr><td>PDO</td><td>PHP Data Objects. Interface PHP pour parler à MySQL de façon sécurisée et portable.</td></tr>
+          <tr><td>Session</td><td>Mécanisme pour mémoriser des données entre les pages pour un utilisateur donné (via un cookie ID).</td></tr>
+          <tr><td>$_SESSION</td><td>Tableau PHP global qui contient les données de la session en cours.</td></tr>
+          <tr><td>$_POST</td><td>Tableau PHP avec les données envoyées par un formulaire en méthode POST.</td></tr>
+          <tr><td>$_FILES</td><td>Tableau PHP avec les informations sur les fichiers uploadés.</td></tr>
+          <tr><td>require_once</td><td>Inclut un fichier PHP une seule fois. Évite les doublons.</td></tr>
+          <tr><td>header()</td><td>Envoie un en-tête HTTP. Utilisé pour les redirections (Location:).</td></tr>
+          <tr><td>cURL</td><td>Bibliothèque PHP pour faire des requêtes HTTP vers d'autres serveurs.</td></tr>
+          <tr><td>define()</td><td>Crée une constante PHP : une valeur qui ne change jamais.</td></tr>
+          <tr><td>htmlspecialchars()</td><td>Convertit les caractères spéciaux en HTML sécurisé pour éviter les injections XSS.</td></tr>
+          <tr><td>password_hash()</td><td>Hache un mot de passe avec BCrypt. Irréversible.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top:28px">🗄️ SQL & Base de données</h2>
+      <table class="data-table">
+        <thead><tr><th>Terme</th><th>Explication</th></tr></thead>
+        <tbody>
+          <tr><td>PRIMARY KEY</td><td>Identifiant unique d'une ligne. Auto-incrémenté.</td></tr>
+          <tr><td>FOREIGN KEY</td><td>Colonne qui référence la PRIMARY KEY d'une autre table.</td></tr>
+          <tr><td>JOIN</td><td>Fusionne deux tables sur une colonne commune.</td></tr>
+          <tr><td>LEFT JOIN</td><td>Comme JOIN mais garde les lignes gauches sans correspondance.</td></tr>
+          <tr><td>INDEX</td><td>Structure qui accélère les recherches sur une colonne.</td></tr>
+          <tr><td>VARCHAR</td><td>Texte de longueur variable (max N caractères).</td></tr>
+          <tr><td>ENUM</td><td>Colonne qui n'accepte que des valeurs prédéfinies.</td></tr>
+          <tr><td>ON DELETE CASCADE</td><td>Supprime automatiquement les lignes liées quand le parent est supprimé.</td></tr>
+          <tr><td>UNIQUE</td><td>Contrainte qui interdit les doublons dans une colonne.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h2>🐍 Python & IA</h2>
+      <table class="data-table">
+        <thead><tr><th>Terme</th><th>Explication</th></tr></thead>
+        <tbody>
+          <tr><td>FastAPI</td><td>Framework Python ultra-rapide pour créer des APIs web.</td></tr>
+          <tr><td>Uvicorn</td><td>Serveur ASGI qui exécute FastAPI. Lancé avec "uvicorn main:app".</td></tr>
+          <tr><td>Pydantic</td><td>Bibliothèque de validation de données. Utilisée pour les modèles de requêtes FastAPI.</td></tr>
+          <tr><td>Groq</td><td>Service cloud d'accès rapide aux LLMs open-source (Llama 3).</td></tr>
+          <tr><td>LLM</td><td>Large Language Model. Modèle d'IA entraîné sur du texte (comme ChatGPT).</td></tr>
+          <tr><td>Llama 3</td><td>LLM open-source de Meta. Utilisé via Groq dans ce projet.</td></tr>
+          <tr><td>Embedding</td><td>Représentation numérique d'un texte sous forme de vecteur.</td></tr>
+          <tr><td>Sentence-Transformers</td><td>Bibliothèque Python pour créer des embeddings de phrases.</td></tr>
+          <tr><td>pdfplumber</td><td>Bibliothèque Python pour extraire le texte des PDF.</td></tr>
+          <tr><td>pytesseract</td><td>OCR (reconnaissance optique de caractères) pour lire du texte dans les images.</td></tr>
+          <tr><td>Pool de connexions</td><td>Ensemble de connexions BDD maintenues ouvertes et partagées.</td></tr>
+          <tr><td>dotenv (.env)</td><td>Fichier texte pour stocker les variables d'environnement secrètes.</td></tr>
+          <tr><td>@router.post()</td><td>Décorateur FastAPI qui associe une fonction à une route HTTP POST.</td></tr>
+          <tr><td>HTTPException</td><td>Exception FastAPI qui retourne automatiquement un code d'erreur HTTP.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top:28px">🧮 Mathématiques IA</h2>
+      <table class="data-table">
+        <thead><tr><th>Terme</th><th>Explication</th></tr></thead>
+        <tbody>
+          <tr><td>Vecteur</td><td>Liste ordonnée de nombres. Ex: [0.12, -0.45, 0.78, ...] (384 nombres).</td></tr>
+          <tr><td>Cosinus</td><td>Mesure l'angle entre deux vecteurs. Entre 0 et 1 : 1 = identiques.</td></tr>
+          <tr><td>NumPy</td><td>Bibliothèque Python pour calculs mathématiques rapides sur des tableaux.</td></tr>
+          <tr><td>np.dot()</td><td>Produit scalaire de deux vecteurs. Étape du calcul cosinus.</td></tr>
+          <tr><td>Temperature</td><td>Paramètre LLM: 0=déterministe, 1=créatif. 0.1 pour extraction, 0.3 pour chat.</td></tr>
+          <tr><td>Token</td><td>Unité de texte pour les LLMs (~0.75 mot). Max_tokens limite la longueur des réponses.</td></tr>
+          <tr><td>Pondération</td><td>Donner un poids différent à chaque critère. Ex: sémantique pèse 40%.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>🔐 Sécurité</h2>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(248,113,113,.15)">🛡️</div><div class="card-title">Injection SQL</div></div>
+      <p>Attaque où un utilisateur insère du SQL dans un formulaire. Protection : requêtes préparées PDO avec <span class="hl">?</span> comme paramètre. Le texte utilisateur ne devient jamais du SQL.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(248,113,113,.15)">🛡️</div><div class="card-title">XSS (Cross-Site Scripting)</div></div>
+      <p>Attaque où du JavaScript malveillant est injecté dans la page. Protection : <span class="hl">htmlspecialchars()</span> en PHP convertit <span class="hl">&lt;script&gt;</span> en texte inoffensif.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(248,113,113,.15)">🛡️</div><div class="card-title">Path Traversal</div></div>
+      <p>Attaque où <span class="hl">../../../etc/passwd</span> est utilisé pour accéder à des fichiers interdits. Protection dans cv_view.php : suppression des <span class="hl">..</span> et vérification que le chemin est dans /uploads/.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon" style="background:rgba(248,113,113,.15)">🛡️</div><div class="card-title">Authentification API</div></div>
+      <p>L'API Python vérifie le header <span class="hl">X-API-Key</span> à chaque requête. Si la clé ne correspond pas à <span class="hl">API_KEY</span>, la requête est rejetée avec HTTP 401.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h2>🚀 Comment lancer le projet</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Importer la base de données</div>
+        <div class="step-body">Dans MySQL : <span class="hl">mysql -u root -p &lt; database.sql</span> ou via phpMyAdmin : importer le fichier database.sql.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Créer le fichier .env Python</div>
+        <div class="step-body">Dans le dossier /api, créer <span class="hl">.env</span> avec : <span class="hl">GROQ_API_KEY=ta_clé_groq</span>, <span class="hl">DB_HOST=localhost</span>, <span class="hl">DB_NAME=cvmatch_ia</span>, <span class="hl">DB_USER=root</span>, <span class="hl">DB_PASS=</span>, <span class="hl">API_KEY=cvmatch-secret-2025</span></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Installer les dépendances Python</div>
+        <div class="step-body"><span class="hl">pip install -r requirements.txt</span> — installe FastAPI, Groq, pdfplumber, Sentence-Transformers et tous les autres packages listés.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Démarrer l'API Python</div>
+        <div class="step-body"><span class="hl">cd cvmatch/api && uvicorn main:app --reload --port 8000</span> — L'API tourne sur http://localhost:8000. Docs disponibles sur http://localhost:8000/docs</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Accéder via PHP (Apache/Nginx)</div>
+        <div class="step-body">Placer le dossier /public dans le dossier web de ton serveur. Visiter http://localhost/cvmatch. L'application est prête.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div style="background:#05080f;border-top:1px solid rgba(99,210,190,0.1);padding:40px 24px;text-align:center;margin-top:60px;">
+  <div style="font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:white;margin-bottom:8px;">CV<span style="color:#63d2be">match</span> IA</div>
+  <div style="font-size:13px;color:#64748b;">Guide Expert Complet — Généré pour toi, pour que tu deviennes un vrai développeur 🚀</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
